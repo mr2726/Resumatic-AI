@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useEffect, useRef } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react'; // Changed from 'react-dom' and renamed
 import { useRouter } from 'next/navigation';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { submitResumeForm, type ActionResponseState } from './actions';
@@ -21,7 +22,7 @@ const initialState: ActionResponseState = {
 export default function CreateResumePage() {
   const router = useRouter();
   const { setJobDescription, setUserInput, setGeneratedResumeHtml } = useResumeContext();
-  const [state, formAction] = useFormState(submitResumeForm, initialState);
+  const [state, formAction] = useActionState(submitResumeForm, initialState); // Changed from useFormState
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
 
