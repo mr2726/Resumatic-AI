@@ -18,7 +18,7 @@ const GenerateResumeInputSchema = z.object({
 export type GenerateResumeInput = z.infer<typeof GenerateResumeInputSchema>;
 
 const GenerateResumeOutputSchema = z.object({
-  resume: z.string().describe('The generated resume as an HTML string, structured for a two-column layout.'),
+  resume: z.string().describe('The generated resume as an HTML string, structured according to the provided example.'),
 });
 export type GenerateResumeOutput = z.infer<typeof GenerateResumeOutputSchema>;
 
@@ -32,7 +32,7 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateResumeOutputSchema},
   prompt: `You are an expert resume writer. Your task is to generate a professional resume formatted as an HTML string.
 This resume should be tailored to the provided job description and user information.
-It should follow a two-column layout inspired by modern resume designs.
+It must strictly follow the HTML structure and class names provided in the example below.
 If the user's input lacks details for sections, invent plausible and relevant information, using realistic-sounding institutions and company names.
 
 Job Description:
@@ -43,15 +43,15 @@ User Input:
 
 Output Instructions:
 - The entire resume must be a single HTML string for the 'resume' field.
-- Do NOT include \`<html>\`, \`<head>\`, \`<body>\`, or \`<style>\` tags. The output should be the inner HTML content suitable for direct injection.
-- Ensure the generated HTML is clean, well-formed, and ready for styling.
-- Use the specified classes for layout and styling.
+- Do NOT include \`<html>\`, \`<head>\`, \`<body>\`, or \`<style>\` tags. The output should be only the inner HTML content starting from <div class="resume-header">.
+- Ensure the generated HTML is clean, well-formed, and ready for styling with the provided class names.
+- Use the exact class names and structure as shown in the HTML example.
 
-HTML Structure:
+HTML Structure Example:
 
 <div class="resume-header">
   <h1>CANDIDATE NAME</h1>
-  <p class="job-title">JOB TITLE OR ASPIRATION</p>
+  <p class="job-title">WEB & GRAPHIC DESIGNER</p>
 </div>
 
 <div class="resume-body">
@@ -61,20 +61,20 @@ HTML Structure:
       <ul>
         <li><span class="contact-label">Phone:</span> (555) 123-4567</li>
         <li><span class="contact-label">Email:</span> candidate.email@example.com</li>
-        <li><span class="contact-label">Website:</span> www.candidatewebsite.com (Optional)</li>
-        <li><span class="contact-label">Address:</span> City, State, Zip (Optional, or general location)</li>
+        <li><span class="contact-label">Website:</span> www.candidatewebsite.com</li>
+        <li><span class="contact-label">Address:</span> City, State, Zip</li>
       </ul>
     </section>
 
     <section class="education-section">
       <h2>EDUCATION</h2>
       <div>
-        <h3>DEGREE NAME (e.g., MASTER OF SCIENCE)</h3>
+        <h3>MASTER OF SCIENCE</h3>
         <p class="institution">University Name - City, Country</p>
         <p class="dates">YYYY - YYYY</p>
       </div>
       <div>
-        <h3>DEGREE NAME (e.g., BACHELOR OF SCIENCE)</h3>
+        <h3>BACHELOR OF SCIENCE</h3>
         <p class="institution">University Name - City, Country</p>
         <p class="dates">YYYY - YYYY</p>
       </div>
@@ -131,22 +131,16 @@ HTML Structure:
   </div>
 </div>
 
-Detailed instructions for specific sections:
-- **Header**: Use \`<h1>\` for the candidate's name (ALL CAPS) and \`<p class="job-title">\` for their job title or aspiration (ALL CAPS, smaller font).
-- **Section Titles (\`<h2>\`)**: For CONTACT, EDUCATION, SKILLS, PROFILE, EXPERIENCE. These should be in ALL CAPS.
-- **Contact Section**: Use an unordered list (\`<ul>\`). Each list item (\`<li>\`) should contain a \`<span class="contact-label">\` for the type (e.g., "Phone:", "Email:") followed by the information.
-- **Education Section**: For each degree, use \`<h3>\` for the degree name (e.g., MASTER OF SCIENCE), \`<p class="institution">\` for the university name and location, and \`<p class="dates">\` for the years.
-- **Skills Section**: Group skills into categories using \`<h3>\` for category titles. List individual skills under each category using \`<ul>\` and \`<li>\`. Do NOT attempt to create visual proficiency bars.
-- **Profile Section**: A brief paragraph summarizing qualifications and career goals.
-- **Experience Section**: Each job should be a \`<div class="experience-entry">\`.
-    - Start with \`<p class="dates">\` for the employment period (e.g., "April 2020 - Present" or "January 2018 - March 2020").
-    - Then \`<h3>\` for the job title (ALL CAPS or Title Case as appropriate).
-    - Then \`<p class="company">\` for the company name (use \`<strong>\` for the company name itself) and location.
-    - Use \`<ul>\` and \`<li>\` for responsibilities and achievements.
-
 Your output for the 'resume' field must be ONLY the HTML string itself, without any surrounding markdown like \`\`\`html ... \`\`\` or explanations.
-Focus on accurate content generation based on user input and realistic placeholder details where needed.
-The HTML structure provided above is a template; adapt it based on the information available and the number of entries for education/experience.
+Focus on accurate content generation based on user input and realistic placeholder details where needed, fitting them into the HTML structure above.
+The job title in the header should be adapted based on the job description or user input if appropriate, otherwise use a relevant default.
+Candidate Name should be generated.
+Contact details like phone, email, website, address should be plausible placeholders if not provided by user.
+Dates for education and experience should be plausible.
+Company names and institutions should be realistic.
+Profile section should be a concise summary.
+Experience bullet points should be action-oriented.
+Skills should be categorized.
 `,
 });
 
