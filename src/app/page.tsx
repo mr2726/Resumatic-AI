@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -75,19 +76,19 @@ export default function LandingPage() {
          <h2 className="text-3xl font-headline font-bold text-foreground mb-6">Why Choose Resumatic AI?</h2>
          <ul className="space-y-4 text-left text-lg text-muted-foreground">
             <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 mr-3 text-primary__replace_this_with_accent_foreground flex-shrink-0 mt-1" />
+                <CheckCircle className="h-6 w-6 mr-3 text-accent flex-shrink-0 mt-1" />
                 <span><strong className="text-foreground">Instant Results:</strong> Get a high-quality resume in minutes, not hours.</span>
             </li>
             <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 mr-3 text-primary_replace_this_with_accent_foreground flex-shrink-0 mt-1" />
+                <CheckCircle className="h-6 w-6 mr-3 text-accent flex-shrink-0 mt-1" />
                 <span><strong className="text-foreground">Job-Optimized:</strong> AI tailors your resume to match specific job descriptions, increasing your chances.</span>
             </li>
             <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 mr-3 text-primary_replace_this_with_accent_foreground flex-shrink-0 mt-1" />
+                <CheckCircle className="h-6 w-6 mr-3 text-accent flex-shrink-0 mt-1" />
                 <span><strong className="text-foreground">Effortless Process:</strong> No complicated forms or sign-ups. Just simple text inputs.</span>
             </li>
             <li className="flex items-start">
-                <CheckCircle className="h-6 w-6 mr-3 text-primary_replace_this_with_accent_foreground flex-shrink-0 mt-1" />
+                <CheckCircle className="h-6 w-6 mr-3 text-accent flex-shrink-0 mt-1" />
                 <span><strong className="text-foreground">Professional Formatting:</strong> Impress employers with a clean, modern, and professionally designed resume.</span>
             </li>
          </ul>
