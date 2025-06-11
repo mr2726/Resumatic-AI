@@ -1,48 +1,27 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react'; // Added useState
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, FileSpreadsheet, RotateCcw, CheckCircle } from 'lucide-react';
+import { Download, FileText, FileSpreadsheet, RotateCcw, CheckCircle, Loader2 } from 'lucide-react'; // Added Loader2
 import { useToast } from '@/hooks/use-toast';
+import { generatePdfAction } from './actions'; // Added import for server action
 
-export default function DownloadResumePage() {
-  const router = useRouter();
-  const { generatedResumeHtml, isPaid, resetContext } = useResumeContext();
-  const { toast } = useToast();
-
-  useEffect(() => {
-    if (!isPaid) {
-      toast({
-        title: "Access Denied",
-        description: "Payment required to access this page.",
-        variant: "destructive",
-      });
-      router.replace('/payment');
-    } else if (!generatedResumeHtml) {
-      toast({
-        title: "No Resume Found",
-        description: "Please generate a resume first.",
-        variant: "destructive",
-      });
-      router.replace('/create-resume');
-    }
-  }, [isPaid, generatedResumeHtml, router, toast]);
-
-  const downloadHtml = () => {
-    if (!generatedResumeHtml) return;
-
-    const styles = `
+const getResumeStyles = (): string => {
+  // Styles extracted for reuse in HTML and PDF generation
+  return `
     body {
       font-family: 'Inter', Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #eaeaea;
       color: #333;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
 
     .resume-header {
@@ -69,13 +48,28 @@ export default function DownloadResumePage() {
 
     .resume-body {
       display: flex;
-      margin: 40px auto;
+      margin: 40px auto; /* Keep original margin for HTML viewing */
       max-width: 1200px;
       background-color: #fff;
       padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px; /* Keep for HTML viewing */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Keep for HTML viewing */
     }
+    
+    /* PDF specific tweaks - these might be overridden by html-to-pdf if it doesn't process media queries well */
+    @media print {
+      body {
+        background-color: #fff; /* White background for printing */
+      }
+      .resume-body {
+        margin: 20px auto;
+        max-width: 1000px; /* Adjust for A4/Letter */
+        padding: 30px;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
 
     .resume-left-column, .resume-right-column {
       flex: 1;
@@ -86,7 +80,8 @@ export default function DownloadResumePage() {
       border-right: 1px solid #ddd;
     }
 
-    .resume-body h2 { /* Ensure targeting h2 within .resume-body for specificity if needed outside this context */
+    /* Targeting h2 specifically inside .resume-body for better scoping, affects generated HTML */
+    .resume-body h2 { 
       font-family: 'Inter', Arial, sans-serif;
       font-size: 24px;
       margin-top: 0;
@@ -97,7 +92,8 @@ export default function DownloadResumePage() {
       font-weight: bold;
     }
 
-    .resume-body h3 { /* Ensure targeting h3 within .resume-body for specificity */
+    /* Targeting h3 specifically inside .resume-body */
+    .resume-body h3 { 
       font-family: 'Inter', Arial, sans-serif;
       font-size: 18px;
       margin: 10px 0;
@@ -140,7 +136,6 @@ export default function DownloadResumePage() {
         margin: 2px 0;
     }
 
-
     .experience-entry {
       margin-bottom: 30px;
     }
@@ -170,7 +165,7 @@ export default function DownloadResumePage() {
     .experience-entry ul {
       margin: 10px 0 0 15px;
       list-style: disc;
-      padding-left: 5px; /* Adjust if bullets are too far or too close */
+      padding-left: 5px; 
     }
 
     .experience-entry ul li {
@@ -200,7 +195,37 @@ export default function DownloadResumePage() {
       color: #444;
     }
     `;
+};
 
+
+export default function DownloadResumePage() {
+  const router = useRouter();
+  const { generatedResumeHtml, isPaid, resetContext } = useResumeContext();
+  const { toast } = useToast();
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isPaid) {
+      toast({
+        title: "Access Denied",
+        description: "Payment required to access this page.",
+        variant: "destructive",
+      });
+      router.replace('/payment');
+    } else if (!generatedResumeHtml) {
+      toast({
+        title: "No Resume Found",
+        description: "Please generate a resume first.",
+        variant: "destructive",
+      });
+      router.replace('/create-resume');
+    }
+  }, [isPaid, generatedResumeHtml, router, toast]);
+
+  const downloadHtml = () => {
+    if (!generatedResumeHtml) return;
+
+    const styles = getResumeStyles();
     const htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
@@ -230,13 +255,72 @@ export default function DownloadResumePage() {
     toast({ title: "Download Started", description: "Your HTML resume is downloading." });
   };
 
-  const downloadPdf = () => {
-    toast({
-      title: "PDF Download (Placeholder)",
-      description: "In a full application, this would download a PDF version of your resume. For now, please use the HTML version.",
-      variant: "default",
-      duration: 5000,
-    });
+  const downloadPdf = async () => {
+    if (!generatedResumeHtml) {
+      toast({ title: "Error", description: "No resume content to generate PDF.", variant: "destructive" });
+      return;
+    }
+    if (isPdfLoading) return;
+
+    setIsPdfLoading(true);
+    toast({ title: "Generating PDF...", description: "Please wait a moment. This can take up to 30 seconds." });
+    
+    const fullHtmlForPdf = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>${getResumeStyles()}</style>
+</head>
+<body>
+  ${generatedResumeHtml}
+</body>
+</html>`;
+
+    try {
+      const result = await generatePdfAction(fullHtmlForPdf, 'Resumatic_AI_Resume.pdf');
+
+      if (result.success && result.data && result.fileName) {
+        const byteCharacters = atob(result.data);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = result.fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        toast({ title: "Success!", description: "Your PDF resume has been downloaded." });
+      } else {
+        toast({
+          title: "PDF Generation Failed",
+          description: result.error || "Could not generate PDF. The server might be busy or an error occurred. Please try HTML download or try again later.",
+          variant: "destructive",
+          duration: 7000,
+        });
+      }
+    } catch (error) {
+      console.error("Error calling generatePdfAction:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred while generating the PDF.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPdfLoading(false);
+    }
   };
 
   const handleStartOver = () => {
@@ -276,10 +360,18 @@ export default function DownloadResumePage() {
               <Button onClick={downloadHtml} size="lg" className="flex-1">
                 <FileText className="mr-2 h-5 w-5" /> Download as HTML
               </Button>
-              <Button onClick={downloadPdf} size="lg" variant="outline" className="flex-1">
-                <FileSpreadsheet className="mr-2 h-5 w-5" /> Download as PDF
+              <Button 
+                onClick={downloadPdf} 
+                size="lg" 
+                variant="outline" 
+                className="flex-1"
+                disabled={isPdfLoading}
+              >
+                {isPdfLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <FileSpreadsheet className="mr-2 h-5 w-5" />}
+                {isPdfLoading ? "Generating PDF..." : "Download as PDF"}
               </Button>
             </div>
+             {isPdfLoading && <p className="text-sm text-muted-foreground mt-3">PDF generation can take up to 30 seconds.</p>}
           </div>
           
           <div className="mt-8">
@@ -293,5 +385,3 @@ export default function DownloadResumePage() {
     </div>
   );
 }
-
-    
