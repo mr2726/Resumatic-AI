@@ -5,33 +5,33 @@
 
 @layer base {
   :root {
-    --background: 206 67% 95%; /* #EAF3FA Light blue */
-    --foreground: 210 25% 25%; /* Dark blue-gray for text */
+    --background: 240 10% 98%; /* Very light gray, almost white */
+    --foreground: 240 10% 20%; /* Dark gray for text */
 
     --card: 0 0% 100%; /* White for cards */
-    --card-foreground: 210 25% 25%;
+    --card-foreground: 240 10% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 25% 25%;
+    --popover-foreground: 240 10% 20%;
 
-    --primary: 209 72% 70%; /* #78B0E8 Soft blue */
+    --primary: 240 10% 50%; /* Mid-gray for lines/borders */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 210 40% 90%; /* Lighter blue-gray for secondary elements */
-    --secondary-foreground: 210 25% 25%;
+    --secondary: 240 5% 90%; /* Lighter blue-gray for secondary elements */
+    --secondary-foreground: 240 10% 25%;
 
-    --muted: 210 40% 90%;
-    --muted-foreground: 210 25% 45%; /* Slightly lighter than main text */
+    --muted: 240 5% 85%; /* For less important text */
+    --muted-foreground: 240 10% 45%; /* Slightly lighter than main text */
 
-    --accent: 267 57% 71%; /* #B088E0 Muted violet */
+    --accent: 240 10% 45%; /* Darker Accent gray for specific highlights if needed */
     --accent-foreground: 0 0% 100%; /* White */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 210 20% 85%; /* Light gray border */
-    --input: 210 20% 90%; /* Slightly darker than background for input fields */
-    --ring: 209 72% 70%; /* Primary color for rings */
+    --border: 240 10% 88%; /* Light gray border */
+    --input: 240 10% 92%; /* Slightly darker than background for input fields */
+    --ring: 240 10% 50%; /* Primary color for rings */
 
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -51,26 +51,25 @@
   }
 
   .dark {
-    /* Keeping dark mode defaults, can be customized if needed */
-    --background: 210 25% 10%;
-    --foreground: 210 25% 90%;
-    --card: 210 25% 12%;
-    --card-foreground: 210 25% 90%;
-    --popover: 210 25% 10%;
-    --popover-foreground: 210 25% 90%;
-    --primary: 209 72% 70%;
-    --primary-foreground: 210 25% 5%;
-    --secondary: 210 25% 20%;
-    --secondary-foreground: 210 25% 90%;
-    --muted: 210 25% 20%;
-    --muted-foreground: 210 25% 60%;
-    --accent: 267 57% 71%;
-    --accent-foreground: 210 25% 5%;
+    --background: 240 10% 10%;
+    --foreground: 240 10% 90%;
+    --card: 240 10% 12%;
+    --card-foreground: 240 10% 90%;
+    --popover: 240 10% 10%;
+    --popover-foreground: 240 10% 90%;
+    --primary: 240 10% 60%;
+    --primary-foreground: 240 10% 5%;
+    --secondary: 240 10% 20%;
+    --secondary-foreground: 240 10% 90%;
+    --muted: 240 10% 20%;
+    --muted-foreground: 240 10% 60%;
+    --accent: 240 10% 50%;
+    --accent-foreground: 240 10% 5%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 210 25% 30%;
-    --input: 210 25% 30%;
-    --ring: 209 72% 70%;
+    --border: 240 10% 30%;
+    --input: 240 10% 30%;
+    --ring: 240 10% 60%;
 
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -103,37 +102,134 @@
     flex-grow: 1;
   }
 
-  /* Custom styles for resume preview content within .prose-sm context */
-  .prose-sm h1 { /* Candidate Name */
-    @apply font-headline text-2xl font-bold mb-1 text-foreground text-center; /* Centered name */
+  .prose-sm {
+    font-size: 0.8rem; /* Base font size for resume, adjust as needed */
+    line-height: 1.5;
   }
-  .prose-sm h1 + p { /* Contact Info */
-    @apply text-xs text-muted-foreground mb-6 text-center; /* Centered contact info */
+  
+  /* Resume specific styles */
+  .resume-header {
+    @apply text-center mb-6;
   }
-  .prose-sm h2 { /* Section Titles: PROFESSIONAL PROFILE, WORK EXPERIENCE, etc. */
+  .resume-header h1 { /* Candidate Name */
+    @apply font-headline text-3xl font-bold text-foreground mb-1 tracking-wide;
+  }
+  .resume-header .job-title { /* Job Title under name */
+    @apply text-sm font-normal text-muted-foreground uppercase tracking-wider;
+  }
+
+  .resume-body {
+    @apply grid grid-cols-3 gap-x-8; /* 3 columns, adjust gap as needed */
+  }
+
+  .resume-left-column {
+    @apply col-span-1 flex flex-col gap-y-6;
+  }
+
+  .resume-right-column {
+    @apply col-span-2 flex flex-col gap-y-6;
+  }
+  
+  .resume-left-column section > h2, 
+  .resume-right-column section > h2 { /* Section Titles */
+    @apply font-headline text-xs font-semibold uppercase tracking-wider text-foreground pt-2 pb-1 mb-2 border-t border-primary;
+  }
+  
+  .contact-section ul {
+    @apply list-none p-0 m-0 space-y-1.5;
+  }
+  .contact-section li {
+    @apply text-xs text-muted-foreground;
+  }
+  .contact-section .contact-label { /* E.g., "Phone:", "Email:" */
+    @apply font-semibold text-foreground mr-1;
+  }
+
+  .education-section div,
+  .skills-section div { /* Wrappers for each education entry or skill category */
+      @apply mb-3;
+  }
+  
+  .education-section h3 { /* Degree Name */
+    @apply font-headline text-sm font-semibold text-foreground mb-0.5;
+  }
+  .education-section .institution,
+  .education-section .dates {
+    @apply text-xs text-muted-foreground mb-0.5;
+  }
+
+  .skills-section h3 { /* Skill Category Title */
+    @apply font-headline text-sm font-semibold text-foreground mb-1;
+  }
+  .skills-section ul {
+    @apply list-none p-0 m-0 space-y-0.5;
+  }
+  .skills-section li {
+    @apply text-xs text-muted-foreground;
+  }
+  
+  .profile-section p {
+    @apply text-xs text-muted-foreground leading-relaxed;
+  }
+
+  .experience-section {
+    @apply relative;
+  }
+  
+  /* Vertical timeline bar for experience section */
+  .experience-section::before {
+    content: '';
+    @apply absolute left-[5px] top-0 bottom-0 w-[2px] bg-border -z-10; /* Adjust left offset and color */
+  }
+
+  .experience-entry {
+    @apply relative pl-6 mb-4; /* Padding left to make space for dot and align content */
+  }
+  
+  /* Dot for each experience entry */
+  .experience-entry::before {
+    content: '';
+    @apply absolute left-[0px] top-[7px] w-2.5 h-2.5 rounded-full bg-primary border-2 border-background; /* Adjust dot styles */
+    transform: translateX(-50%);
+  }
+  
+  .experience-entry .dates {
+    @apply text-xs text-muted-foreground font-medium mb-0.5;
+  }
+  .experience-entry h3 { /* Job Title */
+    @apply font-headline text-sm font-semibold text-foreground mb-0.5;
+  }
+  .experience-entry .company {
+    @apply text-xs text-muted-foreground italic mb-1;
+  }
+  .experience-entry .company strong {
+      @apply not-italic font-semibold text-foreground;
+  }
+  .experience-entry ul {
+    @apply list-disc pl-4 space-y-0.5;
+  }
+  .experience-entry li {
+    @apply text-xs text-muted-foreground leading-relaxed;
+  }
+
+  /* Fallback styles for elements not specifically targeted by resume classes but within prose */
+  .prose-sm h1:not(.resume-header h1) {
+    @apply font-headline text-2xl font-bold mb-1 text-foreground;
+  }
+  .prose-sm h2:not(.resume-left-column section > h2):not(.resume-right-column section > h2) {
     @apply font-headline text-lg font-semibold uppercase tracking-wider mt-6 mb-3 pb-1 border-b-2 border-primary;
   }
-  .prose-sm h3 { /* Job Titles, Degree Names, Skill Categories */
+  .prose-sm h3:not(.education-section h3):not(.skills-section h3):not(.experience-entry h3) {
     @apply font-headline text-base font-semibold mt-4 mb-1 text-foreground;
   }
-  .prose-sm h3 + p { /* Company/Institution Name & Dates - paragraph immediately following h3 */
-    @apply text-xs text-muted-foreground mb-1 italic; /* Made dates/company location italic */
-  }
-  .prose-sm ul {
-    @apply list-disc pl-5 mb-3;
-  }
-  .prose-sm li {
-    @apply mb-1 text-sm leading-relaxed; /* Improved line spacing for list items */
-  }
-  .prose-sm strong { /* For emphasizing company names, etc. within paragraphs or list items */
-    @apply font-semibold text-foreground;
-  }
-  /* Targets divs used by AI to wrap each work experience or education entry */
-  .prose-sm h2 + div, 
-  .prose-sm div + div { /* Ensuring spacing for consecutive job/education blocks */
-      @apply mb-3; 
-  }
-  .prose-sm p { /* General paragraph styling within resume */
+  .prose-sm p {
     @apply text-sm leading-relaxed;
   }
+  .prose-sm ul:not(.contact-section ul):not(.skills-section ul):not(.experience-entry ul) {
+    @apply list-disc pl-5 mb-3;
+  }
+  .prose-sm li:not(.contact-section li):not(.skills-section li):not(.experience-entry li) {
+    @apply mb-1 text-sm leading-relaxed;
+  }
+
 }
