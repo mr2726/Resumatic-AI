@@ -33,7 +33,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert resume writer. Your task is to generate a professional resume formatted as an HTML string.
 This resume should be tailored to the provided job description and user information.
 It must strictly follow the HTML structure and class names provided in the example below.
-If the user's input lacks details for sections, invent plausible and relevant information, using realistic-sounding institutions and company names.
+If the user's input lacks details for sections, invent plausible and relevant information, using realistic-sounding institutions and company names for education and experience.
 
 Job Description:
 {{{jobDescription}}}
@@ -135,7 +135,11 @@ Your output for the 'resume' field must be ONLY the HTML string itself, without 
 Focus on accurate content generation based on user input and realistic placeholder details where needed, fitting them into the HTML structure above.
 The job title in the header should be adapted based on the job description or user input if appropriate, otherwise use a relevant default.
 Candidate Name should be generated.
-Contact details like phone, email, website, address should be plausible placeholders if not provided by user.
+
+For contact details:
+- Generate plausible placeholders for Phone and Email if these are not detailed in the User Input.
+- For Website and Address: ONLY include these in the resume if they are explicitly mentioned in the User Input. If the User Input does not contain information for Website or Address, then OMIT the corresponding \`<li>\` elements entirely from the HTML. Do NOT invent or create placeholder Website or Address details if the user hasn't supplied them.
+
 Dates for education and experience should be plausible.
 Company names and institutions should be realistic.
 Profile section should be a concise summary.
