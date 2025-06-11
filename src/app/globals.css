@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -100,5 +101,39 @@
   }
   main {
     flex-grow: 1;
+  }
+
+  /* Custom styles for resume preview content within .prose-sm context */
+  .prose-sm h1 { /* Candidate Name */
+    @apply font-headline text-2xl font-bold mb-1 text-foreground text-center; /* Centered name */
+  }
+  .prose-sm h1 + p { /* Contact Info */
+    @apply text-xs text-muted-foreground mb-6 text-center; /* Centered contact info */
+  }
+  .prose-sm h2 { /* Section Titles: PROFESSIONAL PROFILE, WORK EXPERIENCE, etc. */
+    @apply font-headline text-lg font-semibold uppercase tracking-wider mt-6 mb-3 pb-1 border-b-2 border-primary;
+  }
+  .prose-sm h3 { /* Job Titles, Degree Names, Skill Categories */
+    @apply font-headline text-base font-semibold mt-4 mb-1 text-foreground;
+  }
+  .prose-sm h3 + p { /* Company/Institution Name & Dates - paragraph immediately following h3 */
+    @apply text-xs text-muted-foreground mb-1 italic; /* Made dates/company location italic */
+  }
+  .prose-sm ul {
+    @apply list-disc pl-5 mb-3;
+  }
+  .prose-sm li {
+    @apply mb-1 text-sm leading-relaxed; /* Improved line spacing for list items */
+  }
+  .prose-sm strong { /* For emphasizing company names, etc. within paragraphs or list items */
+    @apply font-semibold text-foreground;
+  }
+  /* Targets divs used by AI to wrap each work experience or education entry */
+  .prose-sm h2 + div, 
+  .prose-sm div + div { /* Ensuring spacing for consecutive job/education blocks */
+      @apply mb-3; 
+  }
+  .prose-sm p { /* General paragraph styling within resume */
+    @apply text-sm leading-relaxed;
   }
 }
