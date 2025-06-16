@@ -7,9 +7,8 @@ import Link from 'next/link';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, FileSpreadsheet, RotateCcw, CheckCircle, Loader2 } from 'lucide-react';
+import { FileText, FileSpreadsheet, RotateCcw, CheckCircle, Loader2, Printer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { generatePdfAction } from './actions';
 
 const getResumeStyles = (): string => {
   return `
@@ -17,7 +16,7 @@ const getResumeStyles = (): string => {
       font-family: 'Inter', Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #fff; /* Changed for PDF to ensure white background */
+      background-color: #fff; 
       color: #333;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
@@ -47,21 +46,20 @@ const getResumeStyles = (): string => {
 
     .resume-body {
       display: flex;
-      margin: 20px auto; /* Reduced margin for typical A4 */
-      max-width: 1000px; /* Adjusted for A4 like rendering */
+      margin: 20px auto; 
+      max-width: 1000px; 
       background-color: #fff;
-      padding: 30px; /* Adjusted padding */
-      /* No border-radius or shadow for PDF to keep it clean */
+      padding: 30px; 
     }
     
     .resume-left-column, .resume-right-column {
       flex: 1;
-      padding: 15px; /* Adjusted padding */
+      padding: 15px; 
     }
 
     .resume-left-column {
       border-right: 1px solid #ddd;
-      padding-right: 25px; /* Ensure space for border */
+      padding-right: 25px; 
     }
      .resume-right-column {
       padding-left: 25px; 
@@ -70,7 +68,7 @@ const getResumeStyles = (): string => {
 
     .resume-body h2 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 22px; /* Slightly reduced */
+      font-size: 22px; 
       margin-top: 0;
       margin-bottom: 12px;
       color: #333;
@@ -81,7 +79,7 @@ const getResumeStyles = (): string => {
 
     .resume-body h3 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 17px; /* Slightly reduced */
+      font-size: 17px; 
       margin: 8px 0;
       color: #444;
       font-weight: bold;
@@ -95,7 +93,7 @@ const getResumeStyles = (): string => {
 
     .resume-body ul li {
       margin: 4px 0;
-      font-size: 15px; /* Slightly reduced */
+      font-size: 15px; 
       color: #555;
       line-height: 1.5;
     }
@@ -106,7 +104,7 @@ const getResumeStyles = (): string => {
     }
 
     .profile-section p {
-      font-size: 15px; /* Slightly reduced */
+      font-size: 15px; 
       line-height: 1.7;
       color: #444;
       margin:0;
@@ -117,7 +115,7 @@ const getResumeStyles = (): string => {
     }
     .education-section .institution,
     .education-section .dates {
-        font-size: 12px; /* Slightly reduced */
+        font-size: 12px; 
         color: #555;
         margin: 2px 0;
     }
@@ -127,19 +125,19 @@ const getResumeStyles = (): string => {
     }
 
     .experience-entry .dates {
-        font-size: 12px; /* Slightly reduced */
+        font-size: 12px; 
         color: #666;
         margin-bottom: 2px;
     }
 
     .experience-entry h3 { 
       margin: 4px 0;
-      font-size: 17px; /* Consistent with other h3 */
+      font-size: 17px; 
       color: #333;
     }
 
     .experience-entry .company { 
-      font-size: 13px; /* Slightly reduced */
+      font-size: 13px; 
       color: #555;
       margin-bottom: 4px;
     }
@@ -155,7 +153,7 @@ const getResumeStyles = (): string => {
     }
 
     .experience-entry ul li {
-      font-size: 15px; /* Slightly reduced */
+      font-size: 15px; 
       line-height: 1.5;
       color: #444;
       margin-bottom: 3px;
@@ -168,7 +166,7 @@ const getResumeStyles = (): string => {
     .skills-section h3 { 
       margin-top: 15px;
       margin-bottom: 4px;
-      font-size: 17px; /* Consistent */
+      font-size: 17px; 
       color: #333;
     }
     .skills-section > h3:first-of-type {
@@ -177,10 +175,10 @@ const getResumeStyles = (): string => {
 
     .skills-section ul li {
       margin: 4px 0;
-      font-size: 15px; /* Slightly reduced */
+      font-size: 15px; 
       color: #444;
     }
-    /* Ensure no page breaks inside these elements if possible */
+    
     .experience-entry, .education-section > div, .skills-section {
         page-break-inside: avoid;
     }
@@ -192,7 +190,6 @@ export default function DownloadResumePage() {
   const router = useRouter();
   const { generatedResumeHtml, isPaid, resetContext } = useResumeContext();
   const { toast } = useToast();
-  const [isPdfLoading, setIsPdfLoading] = useState(false);
 
   useEffect(() => {
     if (!isPaid) {
@@ -245,16 +242,14 @@ export default function DownloadResumePage() {
     toast({ title: "Download Started", description: "Your HTML resume is downloading." });
   };
 
-  const downloadPdf = async () => {
+  const downloadPdf = () => {
     if (!generatedResumeHtml) {
       toast({ title: "Error", description: "No resume content to generate PDF.", variant: "destructive" });
       return;
     }
-    if (isPdfLoading) return;
 
-    setIsPdfLoading(true);
-    toast({ title: "Generating PDF...", description: "Please wait. This can take a moment." });
-    
+    toast({ title: "Preparing PDF...", description: "Your browser's print dialog will open. Please select 'Save as PDF'." });
+
     const fullHtmlForPdf = `
 <!DOCTYPE html>
 <html lang="en">
@@ -266,51 +261,54 @@ export default function DownloadResumePage() {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
-  <style>${getResumeStyles()}</style>
+  <style>
+    ${getResumeStyles()}
+    @media print {
+      body { margin: 0; padding: 0; background-color: #fff; } /* Ensure no extra margins from browser */
+    }
+  </style>
 </head>
 <body>
   ${generatedResumeHtml}
 </body>
 </html>`;
 
-    try {
-      const result = await generatePdfAction(fullHtmlForPdf, 'Resumatic_AI_Resume.pdf');
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = 'none';
+    iframe.style.visibility = 'hidden'; 
+    document.body.appendChild(iframe);
 
-      if (result.success && result.data && result.fileName) {
-        const byteCharacters = atob(result.data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
+    iframe.contentDocument!.open();
+    iframe.contentDocument!.write(fullHtmlForPdf);
+    iframe.contentDocument!.close();
 
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = result.fileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(link.href);
-        toast({ title: "Success!", description: "Your PDF resume has been downloaded." });
-      } else {
+    const printAndRemove = () => {
+      try {
+        iframe.contentWindow!.focus(); // Focus on iframe before printing
+        iframe.contentWindow!.print();
+      } catch (e) {
+        console.error("Error during printing:", e);
         toast({
-          title: "PDF Generation Failed",
-          description: result.error || "Could not generate PDF. Please try the HTML download, or try PDF again later.",
-          variant: "destructive",
-          duration: 10000,
+          title: "Print Error",
+          description: "Could not open print dialog. Please try again or download as HTML.",
+          variant: "destructive"
         });
+      } finally {
+         // Use setTimeout to ensure print dialog has time to process
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 500); // 500ms delay, adjust if needed
       }
-    } catch (error) {
-      console.error("Error calling generatePdfAction:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred while generating the PDF. Please try the HTML download.",
-        variant: "destructive",
-        duration: 7000,
-      });
-    } finally {
-      setIsPdfLoading(false);
+    };
+    
+    // Ensure content is loaded before printing, especially for images or external resources if any
+    if (iframe.contentWindow && iframe.contentWindow.document.readyState === 'complete') {
+      printAndRemove();
+    } else {
+       iframe.onload = printAndRemove;
     }
   };
 
@@ -357,13 +355,11 @@ export default function DownloadResumePage() {
                 size="lg" 
                 variant="outline" 
                 className="flex-1"
-                disabled={isPdfLoading}
               >
-                {isPdfLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <FileSpreadsheet className="mr-2 h-5 w-5" />}
-                {isPdfLoading ? "Generating PDF..." : "Download as PDF"}
+                <Printer className="mr-2 h-5 w-5" /> Print to PDF
               </Button>
             </div>
-             {isPdfLoading && <p className="text-sm text-muted-foreground mt-3">PDF generation using Puppeteer can take a few moments. Thank you for your patience.</p>}
+             <p className="text-sm text-muted-foreground mt-3">For PDF, your browser's print dialog will appear. Choose "Save as PDF".</p>
           </div>
           
           <div className="mt-8">
@@ -377,4 +373,3 @@ export default function DownloadResumePage() {
     </div>
   );
 }
-
