@@ -7,10 +7,11 @@ import Link from 'next/link';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, FileSpreadsheet, RotateCcw, CheckCircle, Loader2, Printer } from 'lucide-react';
+import { FileText, RotateCcw, CheckCircle, Loader2, Printer } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const getResumeStyles = (): string => {
+  // Styles optimized for A4 single-page PDF output
   return `
     body {
       font-family: 'Inter', Arial, sans-serif;
@@ -20,18 +21,26 @@ const getResumeStyles = (): string => {
       color: #333;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+      width: 210mm; /* A4 width */
+      height: 297mm; /* A4 height - optional, content should dictate */
+    }
+
+    .resume-container { /* Added a container for better control */
+      max-width: 780px; /* Adjusted for A4, allowing for browser margins */
+      margin: 15px auto; /* Reduced margin for print */
+      background-color: #fff;
     }
 
     .resume-header {
       text-align: center;
-      padding: 40px 20px;
+      padding: 20px 10px; /* Reduced padding */
       background-color: #fff;
-      border-bottom: 2px solid #ddd;
+      border-bottom: 1px solid #ddd; /* Thinner border */
     }
 
     .resume-header h1 {
       font-family: 'Space Grotesk', Arial, sans-serif;
-      font-size: 48px;
+      font-size: 32px; /* Reduced font size */
       margin: 0;
       font-weight: bold;
       color: #222;
@@ -39,48 +48,45 @@ const getResumeStyles = (): string => {
 
     .resume-header .job-title {
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 20px;
+      font-size: 16px; /* Reduced font size */
       color: #666;
-      margin-top: 10px;
+      margin-top: 5px; /* Reduced margin */
     }
 
     .resume-body {
       display: flex;
-      margin: 20px auto; 
-      max-width: 1000px; 
-      background-color: #fff;
-      padding: 30px; 
+      padding: 20px 10px; /* Reduced padding */
     }
     
     .resume-left-column, .resume-right-column {
       flex: 1;
-      padding: 15px; 
+      padding: 0 10px; /* Reduced padding */
     }
 
     .resume-left-column {
       border-right: 1px solid #ddd;
-      padding-right: 25px; 
+      padding-right: 15px; 
     }
      .resume-right-column {
-      padding-left: 25px; 
+      padding-left: 15px; 
     }
 
 
     .resume-body h2 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 22px; 
+      font-size: 18px; /* Reduced font size */
       margin-top: 0;
-      margin-bottom: 12px;
+      margin-bottom: 8px; /* Reduced margin */
       color: #333;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 4px;
+      border-bottom: 1px solid #ddd; /* Thinner border */
+      padding-bottom: 3px; /* Reduced padding */
       font-weight: bold;
     }
 
     .resume-body h3 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 17px; 
-      margin: 8px 0;
+      font-size: 14px; /* Reduced font size */
+      margin: 5px 0; /* Reduced margin */
       color: #444;
       font-weight: bold;
     }
@@ -92,10 +98,10 @@ const getResumeStyles = (): string => {
     }
 
     .resume-body ul li {
-      margin: 4px 0;
-      font-size: 15px; 
+      margin: 2px 0; /* Reduced margin */
+      font-size: 12px; /* Reduced font size */
       color: #555;
-      line-height: 1.5;
+      line-height: 1.4; /* Adjusted line height */
     }
 
     .contact-label {
@@ -103,43 +109,48 @@ const getResumeStyles = (): string => {
       color: #222;
     }
 
+    .contact-section ul {
+      margin-bottom: 10px; /* Add some space after contact list */
+    }
+
     .profile-section p {
-      font-size: 15px; 
-      line-height: 1.7;
+      font-size: 12px; /* Reduced font size */
+      line-height: 1.5; /* Adjusted line height */
       color: #444;
-      margin:0;
+      margin:0 0 10px 0;
     }
 
     .education-section > div {
-        margin-bottom: 12px;
+        margin-bottom: 8px; /* Reduced margin */
     }
     .education-section .institution,
     .education-section .dates {
-        font-size: 12px; 
+        font-size: 11px; /* Reduced font size */
         color: #555;
-        margin: 2px 0;
+        margin: 1px 0; /* Reduced margin */
     }
 
     .experience-entry {
-      margin-bottom: 25px;
+      margin-bottom: 15px; /* Reduced margin */
+      page-break-inside: avoid;
     }
 
     .experience-entry .dates {
-        font-size: 12px; 
+        font-size: 11px; /* Reduced font size */
         color: #666;
-        margin-bottom: 2px;
+        margin-bottom: 1px; /* Reduced margin */
     }
 
-    .experience-entry h3 { 
-      margin: 4px 0;
-      font-size: 17px; 
+    .experience-entry h3 { /* Job Title */
+      margin: 2px 0; /* Reduced margin */
+      font-size: 14px; /* Reduced font size */
       color: #333;
     }
 
     .experience-entry .company { 
-      font-size: 13px; 
+      font-size: 12px; /* Reduced font size */
       color: #555;
-      margin-bottom: 4px;
+      margin-bottom: 2px; /* Reduced margin */
     }
     .experience-entry .company strong {
         font-weight: bold;
@@ -147,26 +158,31 @@ const getResumeStyles = (): string => {
     }
 
     .experience-entry ul {
-      margin: 8px 0 0 15px;
+      margin: 4px 0 0 12px; /* Adjusted margin & indent */
       list-style: disc;
       padding-left: 5px; 
     }
 
     .experience-entry ul li {
-      font-size: 15px; 
-      line-height: 1.5;
+      font-size: 12px; /* Reduced font size */
+      line-height: 1.4; /* Adjusted line height */
       color: #444;
-      margin-bottom: 3px;
+      margin-bottom: 2px; /* Reduced margin */
     }
 
     .resume-right-column .profile-section {
-      margin-bottom: 25px;
+      margin-bottom: 15px; /* Reduced margin */
+      page-break-inside: avoid;
+    }
+    
+    .education-section, .skills-section, .contact-section {
+        page-break-inside: avoid;
     }
 
-    .skills-section h3 { 
-      margin-top: 15px;
-      margin-bottom: 4px;
-      font-size: 17px; 
+    .skills-section h3 { /* Category */
+      margin-top: 8px; /* Reduced margin */
+      margin-bottom: 2px; /* Reduced margin */
+      font-size: 14px; /* Reduced font size */
       color: #333;
     }
     .skills-section > h3:first-of-type {
@@ -174,13 +190,9 @@ const getResumeStyles = (): string => {
     }
 
     .skills-section ul li {
-      margin: 4px 0;
-      font-size: 15px; 
+      margin: 2px 0; /* Reduced margin */
+      font-size: 12px; /* Reduced font size */
       color: #444;
-    }
-    
-    .experience-entry, .education-section > div, .skills-section {
-        page-break-inside: avoid;
     }
     `;
 };
@@ -227,7 +239,9 @@ export default function DownloadResumePage() {
   <style>${styles}</style>
 </head>
 <body>
-  ${generatedResumeHtml}
+  <div class="resume-container">
+    ${generatedResumeHtml}
+  </div>
 </body>
 </html>`;
 
@@ -242,7 +256,7 @@ export default function DownloadResumePage() {
     toast({ title: "Download Started", description: "Your HTML resume is downloading." });
   };
 
-  const downloadPdf = () => {
+  const printToPdf = () => {
     if (!generatedResumeHtml) {
       toast({ title: "Error", description: "No resume content to generate PDF.", variant: "destructive" });
       return;
@@ -264,21 +278,34 @@ export default function DownloadResumePage() {
   <style>
     ${getResumeStyles()}
     @media print {
-      body { margin: 0; padding: 0; background-color: #fff; } /* Ensure no extra margins from browser */
+      body { 
+        margin: 0; 
+        padding: 0; 
+        background-color: #fff; 
+        -webkit-print-color-adjust: exact; 
+        print-color-adjust: exact;
+      }
+      .resume-container {
+        margin: 0; /* Remove margins for print */
+        box-shadow: none; /* Remove shadow for print */
+      }
     }
   </style>
 </head>
 <body>
-  ${generatedResumeHtml}
+  <div class="resume-container">
+    ${generatedResumeHtml}
+  </div>
 </body>
 </html>`;
 
     const iframe = document.createElement('iframe');
     iframe.style.position = 'fixed';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
+    iframe.style.width = '0'; // Can be '100%' or a specific width for debugging layout
+    iframe.style.height = '0'; // Can be '100vh' or a specific height for debugging layout
     iframe.style.border = 'none';
-    iframe.style.visibility = 'hidden'; 
+    iframe.style.visibility = 'hidden'; // Make it 'visible' for debugging layout issues
+    // iframe.style.zIndex = '10000'; // For debugging, bring to front
     document.body.appendChild(iframe);
 
     iframe.contentDocument!.open();
@@ -287,24 +314,34 @@ export default function DownloadResumePage() {
 
     const printAndRemove = () => {
       try {
-        iframe.contentWindow!.focus(); // Focus on iframe before printing
-        iframe.contentWindow!.print();
+        iframe.contentWindow!.focus(); 
+        const printSuccessful = iframe.contentWindow!.document.execCommand('print', false, undefined);
+        if (!printSuccessful) { // Fallback for browsers that don't return true/false or where execCommand fails for print
+             iframe.contentWindow!.print();
+        }
       } catch (e) {
         console.error("Error during printing:", e);
-        toast({
-          title: "Print Error",
-          description: "Could not open print dialog. Please try again or download as HTML.",
-          variant: "destructive"
-        });
+        // Fallback if execCommand is blocked or fails
+        try {
+            iframe.contentWindow!.print();
+        } catch (e2) {
+             console.error("Secondary print attempt failed:", e2);
+             toast({
+                title: "Print Error",
+                description: "Could not open print dialog. Please try again or download as HTML.",
+                variant: "destructive"
+             });
+        }
       } finally {
-         // Use setTimeout to ensure print dialog has time to process
         setTimeout(() => {
-          document.body.removeChild(iframe);
-        }, 500); // 500ms delay, adjust if needed
+          if (document.body.contains(iframe)) {
+            document.body.removeChild(iframe);
+          }
+        }, 500); 
       }
     };
     
-    // Ensure content is loaded before printing, especially for images or external resources if any
+    // Ensure content is loaded before printing
     if (iframe.contentWindow && iframe.contentWindow.document.readyState === 'complete') {
       printAndRemove();
     } else {
@@ -351,7 +388,7 @@ export default function DownloadResumePage() {
                 <FileText className="mr-2 h-5 w-5" /> Download as HTML
               </Button>
               <Button 
-                onClick={downloadPdf} 
+                onClick={printToPdf} 
                 size="lg" 
                 variant="outline" 
                 className="flex-1"
@@ -373,3 +410,4 @@ export default function DownloadResumePage() {
     </div>
   );
 }
+
