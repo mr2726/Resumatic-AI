@@ -330,7 +330,8 @@ export default function DownloadResumePage() {
 
   if (!isPaid || !generatedResumeHtml) {
     return (
-      <div className="flex flex-col items-center justify-center text-center">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
         <p className="text-lg text-muted-foreground">Verifying access or loading resume...</p>
          <Link href="/create-resume">
           <Button variant="link" className="mt-4">Go to Resume Creator</Button>
@@ -354,7 +355,7 @@ export default function DownloadResumePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="p-6 border rounded-lg bg-background">
+          <div className="p-6 border rounded-lg bg-muted/20 dark:bg-muted/50">
             <h3 className="font-semibold text-xl mb-4 text-foreground">Download Options</h3>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button onClick={downloadHtml} size="lg" className="flex-1">
