@@ -5,7 +5,8 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-// Предполагается, что библиотека html-to-pdf доступна через require
+// html-to-pdf is an older library and might have issues in serverless environments
+// if PhantomJS (its dependency) is not available or configured.
 const htmlToPdf = require('html-to-pdf');
 
 interface PdfGenerationResponse {
@@ -31,17 +32,22 @@ export async function generatePdfAction(
       htmlToPdf.convertHTMLFile(
         tempHtmlPath,
         tempPdfPath,
-        (error: any, success: any) => {
+        (error: any, successInfo: any) => { // successInfo parameter is often not detailed
           if (error) {
-            console.error('html-to-pdf conversion error:', error);
-            // Попытка предоставить более подробную ошибку, если PhantomJS отсутствует
-            if (error.message && error.message.includes('PhantomJS not found')) {
-                reject(new Error('Failed to convert HTML to PDF. PhantomJS might be missing on the server.'));
+            console.error('html-to-pdf conversion error object:', error);
+            if (error.message && error.message.toLowerCase().includes('phantomjs')) {
+              reject(new Error('PDF Generation Failed: PhantomJS, a required component, was not found or failed. Please try HTML download.'));
             } else {
-                reject(new Error('Failed to convert HTML to PDF. Check server logs for details.'));
+              reject(new Error(`PDF Generation Failed: Conversion error - ${error.message || 'Unknown error during conversion'}. Please try HTML download.`));
             }
           } else {
-            resolve();
+            // Check if the file was actually created, as html-to-pdf might not always error out correctly
+            if (fs.existsSync(tempPdfPath)) {
+              resolve();
+            } else {
+              console.error('html-to-pdf reported success, but PDF file not found at:', tempPdfPath);
+              reject(new Error('PDF Generation Failed: Output file was not created by the converter. This often indicates an issue with PhantomJS. Please try HTML download.'));
+            }
           }
         }
       );
@@ -56,10 +62,15 @@ export async function generatePdfAction(
       fileName: fileName,
     };
   } catch (error: any) {
-    console.error('Error in generatePdfAction:', error);
+    console.error('Error in generatePdfAction catch block:', error);
+    // Ensure the error message passed to the client is helpful
+    let detailedErrorMessage = error.message || 'An unexpected error occurred during PDF generation.';
+    if (error.code === 'ENOENT' && error.path === tempPdfPath) {
+      detailedErrorMessage = `PDF Generation Failed: Could not find the generated PDF file. This usually means the conversion process failed (e.g., due to PhantomJS issues). Please try HTML download.`;
+    }
     return {
       success: false,
-      error: error.message || 'An unexpected error occurred during PDF generation.',
+      error: detailedErrorMessage,
     };
   } finally {
     try {
