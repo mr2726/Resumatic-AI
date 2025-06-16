@@ -7,9 +7,9 @@ import Link from 'next/link';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, RotateCcw, CheckCircle, Loader2, DownloadCloud } from 'lucide-react'; // Changed Printer to DownloadCloud
+import { FileText, RotateCcw, CheckCircle, Loader2, DownloadCloud } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import html2pdf from 'html2pdf.js';
+// Removed static import: import html2pdf from 'html2pdf.js';
 
 const getResumeStyles = (): string => {
   // Styles optimized for A4 single-page PDF output
@@ -23,28 +23,26 @@ const getResumeStyles = (): string => {
       color: #333;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-      /* width: 210mm; A4 width - html2pdf.js handles this with format:'a4' */
-      /* height: 297mm; A4 height - optional, content should dictate */
     }
 
     .resume-container { 
-      width: 100%; /* Use 100% width for html2pdf content element */
-      max-width: 190mm; /* Approx A4 width minus some margin, adjust as needed */
-      margin: 10mm auto; /* Centering for A4, adjust as needed */
+      width: 100%; 
+      max-width: 190mm; 
+      margin: 10mm auto; 
       background-color: #fff;
       box-sizing: border-box;
     }
 
     .resume-header {
       text-align: center;
-      padding: 15px 5px; /* Reduced padding */
+      padding: 15px 5px; 
       background-color: #fff;
-      border-bottom: 1px solid #ddd; /* Thinner border */
+      border-bottom: 1px solid #ddd; 
     }
 
     .resume-header h1 {
       font-family: 'Space Grotesk', Arial, sans-serif;
-      font-size: 28px; /* Reduced font size */
+      font-size: 28px; 
       margin: 0;
       font-weight: bold;
       color: #222;
@@ -52,19 +50,19 @@ const getResumeStyles = (): string => {
 
     .resume-header .job-title {
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 14px; /* Reduced font size */
+      font-size: 14px; 
       color: #666;
-      margin-top: 4px; /* Reduced margin */
+      margin-top: 4px; 
     }
 
     .resume-body {
       display: flex;
-      padding: 15px 5px; /* Reduced padding */
+      padding: 15px 5px; 
     }
     
     .resume-left-column, .resume-right-column {
       flex: 1;
-      padding: 0 8px; /* Reduced padding */
+      padding: 0 8px; 
     }
 
     .resume-left-column {
@@ -78,19 +76,19 @@ const getResumeStyles = (): string => {
 
     .resume-body h2 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 16px; /* Reduced font size */
+      font-size: 16px; 
       margin-top: 0;
-      margin-bottom: 6px; /* Reduced margin */
+      margin-bottom: 6px; 
       color: #333;
-      border-bottom: 1px solid #ddd; /* Thinner border */
-      padding-bottom: 2px; /* Reduced padding */
+      border-bottom: 1px solid #ddd; 
+      padding-bottom: 2px; 
       font-weight: bold;
     }
 
     .resume-body h3 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 13px; /* Reduced font size */
-      margin: 4px 0; /* Reduced margin */
+      font-size: 13px; 
+      margin: 4px 0; 
       color: #444;
       font-weight: bold;
     }
@@ -102,10 +100,10 @@ const getResumeStyles = (): string => {
     }
 
     .resume-body ul li {
-      margin: 1px 0; /* Reduced margin */
-      font-size: 11px; /* Reduced font size */
+      margin: 1px 0; 
+      font-size: 11px; 
       color: #555;
-      line-height: 1.3; /* Adjusted line height */
+      line-height: 1.3; 
     }
 
     .contact-label {
@@ -114,46 +112,46 @@ const getResumeStyles = (): string => {
     }
 
     .contact-section ul {
-      margin-bottom: 8px; /* Add some space after contact list */
+      margin-bottom: 8px; 
     }
 
     .profile-section p {
-      font-size: 11px; /* Reduced font size */
-      line-height: 1.4; /* Adjusted line height */
+      font-size: 11px; 
+      line-height: 1.4; 
       color: #444;
       margin:0 0 8px 0;
     }
 
     .education-section > div {
-        margin-bottom: 6px; /* Reduced margin */
+        margin-bottom: 6px; 
     }
     .education-section .institution,
     .education-section .dates {
-        font-size: 10px; /* Reduced font size */
+        font-size: 10px; 
         color: #555;
-        margin: 1px 0; /* Reduced margin */
+        margin: 1px 0; 
     }
 
     .experience-entry {
-      margin-bottom: 12px; /* Reduced margin */
+      margin-bottom: 12px; 
     }
 
     .experience-entry .dates {
-        font-size: 10px; /* Reduced font size */
+        font-size: 10px; 
         color: #666;
-        margin-bottom: 1px; /* Reduced margin */
+        margin-bottom: 1px; 
     }
 
-    .experience-entry h3 { /* Job Title */
-      margin: 1px 0; /* Reduced margin */
-      font-size: 13px; /* Reduced font size */
+    .experience-entry h3 { 
+      margin: 1px 0; 
+      font-size: 13px; 
       color: #333;
     }
 
     .experience-entry .company { 
-      font-size: 11px; /* Reduced font size */
+      font-size: 11px; 
       color: #555;
-      margin-bottom: 1px; /* Reduced margin */
+      margin-bottom: 1px; 
     }
     .experience-entry .company strong {
         font-weight: bold;
@@ -161,26 +159,26 @@ const getResumeStyles = (): string => {
     }
 
     .experience-entry ul {
-      margin: 3px 0 0 10px; /* Adjusted margin & indent */
+      margin: 3px 0 0 10px; 
       list-style: disc;
       padding-left: 4px; 
     }
 
     .experience-entry ul li {
-      font-size: 11px; /* Reduced font size */
-      line-height: 1.3; /* Adjusted line height */
+      font-size: 11px; 
+      line-height: 1.3; 
       color: #444;
-      margin-bottom: 1px; /* Reduced margin */
+      margin-bottom: 1px; 
     }
 
     .resume-right-column .profile-section {
-      margin-bottom: 12px; /* Reduced margin */
+      margin-bottom: 12px; 
     }
     
-    .skills-section h3 { /* Category */
-      margin-top: 6px; /* Reduced margin */
-      margin-bottom: 1px; /* Reduced margin */
-      font-size: 13px; /* Reduced font size */
+    .skills-section h3 { 
+      margin-top: 6px; 
+      margin-bottom: 1px; 
+      font-size: 13px; 
       color: #333;
     }
     .skills-section > h3:first-of-type {
@@ -188,12 +186,11 @@ const getResumeStyles = (): string => {
     }
 
     .skills-section ul li {
-      margin: 1px 0; /* Reduced margin */
-      font-size: 11px; /* Reduced font size */
+      margin: 1px 0; 
+      font-size: 11px; 
       color: #444;
     }
 
-    /* Ensure page breaks are avoided within these sections if content is too long */
     .education-section, .skills-section, .contact-section, .experience-entry, .profile-section {
         page-break-inside: avoid;
     }
@@ -289,16 +286,16 @@ export default function DownloadResumePage() {
       </html>`;
     
     const options = {
-      margin: 0, // CSS handles margins via .resume-container
+      margin: 0, 
       filename: 'Resumatic_AI_Resume.pdf',
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'avoid-all'] } // 'avoid-all' tries to prevent elements from breaking, 'css' respects CSS break rules
+      pagebreak: { mode: ['css', 'avoid-all'] } 
     };
 
     try {
-      // html2pdf.js uses Promises
+      const html2pdf = (await import('html2pdf.js')).default;
       await html2pdf().from(fullHtmlForPdf).set(options).save();
       toast({ title: "PDF Downloaded", description: "Your resume PDF has been downloaded." });
     } catch (error) {
@@ -382,4 +379,3 @@ export default function DownloadResumePage() {
     </div>
   );
 }
-
