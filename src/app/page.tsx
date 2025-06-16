@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
-import Image from 'next/image';
 
 export default function LandingPage() {
   return (
@@ -20,17 +19,6 @@ export default function LandingPage() {
             Create Your Resume Now <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </Link>
-      </section>
-
-      <section className="w-full max-w-4xl">
-        <Image 
-          src="https://placehold.co/1000x400.png" 
-          alt="Resume examples" 
-          width={1000} 
-          height={400} 
-          className="rounded-lg shadow-xl"
-          data-ai-hint="resume templates professional" 
-        />
       </section>
 
       <section className="w-full max-w-4xl space-y-8">
@@ -66,7 +54,7 @@ export default function LandingPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Preview your new resume. Happy with it? A small one-time payment unlocks it for download.</p>
+              <p className="text-muted-foreground">Preview your new resume. Happy with it? Unlock it for free for download.</p>
             </CardContent>
           </Card>
         </div>

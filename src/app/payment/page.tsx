@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -5,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { CreditCard, Loader2, CheckCircle } from 'lucide-react';
+import { CreditCard, Loader2, CheckCircle, Download } from 'lucide-react'; // Added Download
 import { useToast } from '@/hooks/use-toast';
 
 export default function PaymentPage() {
@@ -19,25 +20,25 @@ export default function PaymentPage() {
     if (!generatedResumeHtml) {
       router.replace('/create-resume');
     }
-    // If already paid, redirect to download
+    // If already "paid" (unlocked), redirect to download
     if (isPaid) {
       router.replace('/download-resume');
     }
   }, [generatedResumeHtml, isPaid, router]);
 
-  const handlePayment = () => {
+  const handleFreeUnlock = () => {
     setIsLoading(true);
-    // Simulate payment processing
+    // Simulate unlocking process
     setTimeout(() => {
       setIsPaid(true);
       setIsLoading(false);
       toast({
-        title: "Payment Successful!",
-        description: "Your resume is now unlocked.",
+        title: "Resume Unlocked!",
+        description: "Your resume is now ready for download.",
         action: <CheckCircle className="text-green-500" />,
       });
       router.push('/download-resume');
-    }, 2000); // Simulate 2 second payment processing
+    }, 1000); // Simulate 1 second unlock
   };
   
   if (!generatedResumeHtml || isPaid) {
@@ -54,25 +55,24 @@ export default function PaymentPage() {
       <Card className="shadow-xl">
         <CardHeader>
           <CardTitle className="font-headline text-3xl flex items-center">
-            <CreditCard className="h-8 w-8 mr-3 text-primary" />
-            Unlock Your Resume
+            <Download className="h-8 w-8 mr-3 text-primary" /> {/* Changed Icon */}
+            Get Your Free Resume
           </CardTitle>
           <CardDescription className="text-lg">
-            A one-time payment of <strong className="text-foreground">$9.99</strong> will grant you full access to download your professionally crafted resume.
+            Your professionally crafted resume is ready. Unlock it now for free to download.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <h3 className="font-semibold text-lg mb-2">Order Summary</h3>
+            <h3 className="font-semibold text-lg mb-2">Summary</h3>
             <div className="flex justify-between items-center p-3 bg-muted rounded-md">
               <span>AI Generated Resume</span>
-              <span className="font-bold text-foreground">$9.99</span>
+              <span className="font-bold text-foreground">Free</span>
             </div>
           </div>
-          {/* Placeholder for actual payment form elements */}
           <div className="text-center p-4 border border-dashed rounded-md">
             <p className="text-muted-foreground">
-              In a real application, a payment form (e.g., Stripe Elements) would be here.
+              Click the button below to unlock and download your resume.
             </p>
           </div>
         </CardContent>
@@ -80,16 +80,16 @@ export default function PaymentPage() {
           <Button 
             size="lg" 
             className="w-full font-semibold text-lg" 
-            onClick={handlePayment}
+            onClick={handleFreeUnlock}
             disabled={isLoading}
           >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Processing Payment...
+                Unlocking...
               </>
             ) : (
-              "Pay $9.99 & Download Resume"
+              "Get Free Resume & Download"
             )}
           </Button>
         </CardFooter>
