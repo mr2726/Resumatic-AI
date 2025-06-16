@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from 'react';
@@ -46,7 +47,7 @@ export default function PreviewResumePage() {
             Preview Your AI-Generated Resume
           </CardTitle>
           <CardDescription className="text-lg">
-            Here's a preview of your professionally crafted resume. It's locked for now. Proceed to payment to unlock and download.
+            Here's a preview of your professionally crafted resume. It's currently locked. Click below to unlock it for download.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -77,12 +78,12 @@ export default function PreviewResumePage() {
         </CardContent>
         <CardFooter className="flex flex-col items-center space-y-4 pt-6">
           <p className="text-muted-foreground text-center">
-            Your resume is ready! A small one-time payment unlocks the full version for download in HTML and PDF formats.
+            Your resume is ready! Click the button below to unlock the full version for download in HTML and PDF formats.
           </p>
           <Link href="/payment">
             <Button size="lg" className="font-semibold text-lg">
               <Lock className="mr-2 h-5 w-5" />
-              Unlock & Proceed to Payment
+              Unlock
             </Button>
           </Link>
         </CardFooter>
