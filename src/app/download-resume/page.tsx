@@ -1,18 +1,17 @@
 
 "use client";
 
-import { useEffect, useState } from 'react'; // Added useState
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, FileSpreadsheet, RotateCcw, CheckCircle, Loader2 } from 'lucide-react'; // Added Loader2
+import { Download, FileText, FileSpreadsheet, RotateCcw, CheckCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { generatePdfAction } from './actions'; // Added import for server action
+import { generatePdfAction } from './actions';
 
 const getResumeStyles = (): string => {
-  // Styles extracted for reuse in HTML and PDF generation
   return `
     body {
       font-family: 'Inter', Arial, sans-serif;
@@ -48,22 +47,21 @@ const getResumeStyles = (): string => {
 
     .resume-body {
       display: flex;
-      margin: 40px auto; /* Keep original margin for HTML viewing */
+      margin: 40px auto; 
       max-width: 1200px;
       background-color: #fff;
       padding: 40px;
-      border-radius: 10px; /* Keep for HTML viewing */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Keep for HTML viewing */
+      border-radius: 10px; 
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
     }
     
-    /* PDF specific tweaks - these might be overridden by html-to-pdf if it doesn't process media queries well */
     @media print {
       body {
-        background-color: #fff; /* White background for printing */
+        background-color: #fff; 
       }
       .resume-body {
         margin: 20px auto;
-        max-width: 1000px; /* Adjust for A4/Letter */
+        max-width: 1000px; 
         padding: 30px;
         border-radius: 0;
         box-shadow: none;
@@ -80,7 +78,6 @@ const getResumeStyles = (): string => {
       border-right: 1px solid #ddd;
     }
 
-    /* Targeting h2 specifically inside .resume-body for better scoping, affects generated HTML */
     .resume-body h2 { 
       font-family: 'Inter', Arial, sans-serif;
       font-size: 24px;
@@ -92,7 +89,6 @@ const getResumeStyles = (): string => {
       font-weight: bold;
     }
 
-    /* Targeting h3 specifically inside .resume-body */
     .resume-body h3 { 
       font-family: 'Inter', Arial, sans-serif;
       font-size: 18px;
@@ -146,13 +142,13 @@ const getResumeStyles = (): string => {
         margin-bottom: 2px;
     }
 
-    .experience-entry h3 { /* Job Title in experience */
+    .experience-entry h3 { 
       margin: 5px 0;
       font-size: 18px;
       color: #333;
     }
 
-    .experience-entry .company { /* Company Name and Location */
+    .experience-entry .company { 
       font-size: 14px;
       color: #555;
       margin-bottom: 5px;
@@ -179,7 +175,7 @@ const getResumeStyles = (): string => {
       margin-bottom: 30px;
     }
 
-    .skills-section h3 { /* Category like "Technical Skills" */
+    .skills-section h3 { 
       margin-top: 20px;
       margin-bottom: 5px;
       font-size: 18px;
@@ -263,7 +259,7 @@ export default function DownloadResumePage() {
     if (isPdfLoading) return;
 
     setIsPdfLoading(true);
-    toast({ title: "Generating PDF...", description: "Please wait a moment. This can take up to 30 seconds." });
+    toast({ title: "Generating PDF...", description: "Please wait. This can take up to 30 seconds." });
     
     const fullHtmlForPdf = `
 <!DOCTYPE html>
@@ -306,17 +302,18 @@ export default function DownloadResumePage() {
       } else {
         toast({
           title: "PDF Generation Failed",
-          description: result.error || "Could not generate PDF. The server might be busy or an error occurred. Please try HTML download or try again later.",
+          description: result.error || "Could not generate PDF. This feature can be unreliable on some server environments. Please try the HTML download, or try PDF again later.",
           variant: "destructive",
-          duration: 7000,
+          duration: 10000, // Increased duration for this specific error
         });
       }
     } catch (error) {
       console.error("Error calling generatePdfAction:", error);
       toast({
         title: "Error",
-        description: "An unexpected error occurred while generating the PDF.",
+        description: "An unexpected error occurred while generating the PDF. Please try the HTML download.",
         variant: "destructive",
+        duration: 7000,
       });
     } finally {
       setIsPdfLoading(false);
@@ -372,7 +369,7 @@ export default function DownloadResumePage() {
                 {isPdfLoading ? "Generating PDF..." : "Download as PDF"}
               </Button>
             </div>
-             {isPdfLoading && <p className="text-sm text-muted-foreground mt-3">PDF generation can take up to 30 seconds.</p>}
+             {isPdfLoading && <p className="text-sm text-muted-foreground mt-3">PDF generation can take up to 30 seconds and may not work in all environments.</p>}
           </div>
           
           <div className="mt-8">
@@ -386,3 +383,4 @@ export default function DownloadResumePage() {
     </div>
   );
 }
+
