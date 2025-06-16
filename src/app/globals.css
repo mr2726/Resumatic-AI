@@ -5,49 +5,49 @@
 
 @layer base {
   :root {
-    --background: 240 10% 98%; /* Very light gray, almost white - App Background */
-    --foreground: 240 10% 20%; /* Dark gray for text - App Text */
+    --background: 210 60% 98%; /* Very light, slightly cool off-white */
+    --foreground: 210 30% 20%; /* Dark, slightly cool gray for text */
 
-    --card: 0 0% 100%; /* White for cards - App Card Background */
-    --card-foreground: 240 10% 20%;
+    --card: 0 0% 100%; /* White for cards */
+    --card-foreground: 210 30% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 20%;
+    --popover-foreground: 210 30% 20%;
 
-    --primary: 240 10% 50%; /* Mid-gray for lines/borders - App Primary */
+    --primary: 210 70% 55%; /* Vibrant blue */
     --primary-foreground: 0 0% 100%; /* White */
 
-    --secondary: 240 5% 90%; /* Lighter blue-gray for secondary elements */
-    --secondary-foreground: 240 10% 25%;
+    --secondary: 210 50% 90%; /* Lighter blue-gray */
+    --secondary-foreground: 210 30% 30%;
 
-    --muted: 240 5% 85%; /* For less important text */
-    --muted-foreground: 240 10% 45%; /* Slightly lighter than main text */
+    --muted: 210 30% 85%; /* Lighter, less saturated blue-gray */
+    --muted-foreground: 210 20% 50%; 
 
-    --accent: 240 10% 45%; /* Darker Accent gray for specific highlights if needed */
+    --accent: 200 80% 60%; /* Brighter, slightly different blue for accents */
     --accent-foreground: 0 0% 100%; /* White */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 10% 88%; /* Light gray border */
-    --input: 240 10% 92%; /* Slightly darker than background for input fields */
-    --ring: 240 10% 50%; /* Primary color for rings */
+    --border: 210 30% 88%; /* Light cool gray border */
+    --input: 210 30% 92%; /* Slightly darker than background for input fields */
+    --ring: 210 70% 55%; /* Primary color for rings */
 
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-1: 210 70% 50%;
+    --chart-2: 190 70% 45%;
+    --chart-3: 230 70% 60%;
+    --chart-4: 200 75% 55%;
+    --chart-5: 220 65% 58%;
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 210 60% 98%; 
+    --sidebar-foreground: 210 30% 20%;
+    --sidebar-primary: 210 70% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 50% 90%;
+    --sidebar-accent-foreground: 210 30% 30%;
+    --sidebar-border: 210 30% 88%;
+    --sidebar-ring: 210 70% 55%;
 
     /* Project specific fonts available */
     --font-inter: 'Inter', sans-serif;
@@ -55,40 +55,48 @@
   }
 
   .dark {
-    --background: 240 10% 10%;
-    --foreground: 240 10% 90%;
-    --card: 240 10% 12%;
-    --card-foreground: 240 10% 90%;
-    --popover: 240 10% 10%;
-    --popover-foreground: 240 10% 90%;
-    --primary: 240 10% 60%;
-    --primary-foreground: 240 10% 5%;
-    --secondary: 240 10% 20%;
-    --secondary-foreground: 240 10% 90%;
-    --muted: 240 10% 20%;
-    --muted-foreground: 240 10% 60%;
-    --accent: 240 10% 50%;
-    --accent-foreground: 240 10% 5%;
+    --background: 210 30% 12%; /* Dark blue-gray */
+    --foreground: 210 30% 90%; /* Light cool gray text */
+
+    --card: 210 30% 15%; /* Slightly lighter dark blue-gray for cards */
+    --card-foreground: 210 30% 90%;
+
+    --popover: 210 30% 12%;
+    --popover-foreground: 210 30% 90%;
+
+    --primary: 210 70% 60%; /* Slightly lighter blue for dark mode primary */
+    --primary-foreground: 210 20% 10%; /* Very dark text on primary */
+
+    --secondary: 210 30% 25%; /* Darker blue-gray */
+    --secondary-foreground: 210 30% 85%;
+
+    --muted: 210 30% 25%;
+    --muted-foreground: 210 20% 65%;
+
+    --accent: 200 80% 65%; /* Brighter accent for dark mode */
+    --accent-foreground: 210 20% 5%; /* Very dark text on accent */
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 10% 30%;
-    --input: 240 10% 30%;
-    --ring: 240 10% 60%;
 
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --border: 210 20% 35%; /* Mid-dark cool gray border */
+    --input: 210 20% 30%; /* Dark input background */
+    --ring: 210 70% 60%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --chart-1: 210 70% 60%;
+    --chart-2: 190 70% 55%;
+    --chart-3: 230 70% 70%;
+    --chart-4: 200 75% 65%;
+    --chart-5: 220 65% 68%;
+
+    --sidebar-background: 210 30% 12%;
+    --sidebar-foreground: 210 30% 90%;
+    --sidebar-primary: 210 70% 60%;
+    --sidebar-primary-foreground: 210 20% 10%;
+    --sidebar-accent: 210 30% 25%;
+    --sidebar-accent-foreground: 210 30% 85%;
+    --sidebar-border: 210 20% 35%;
+    --sidebar-ring: 210 70% 60%;
   }
 }
 
@@ -102,83 +110,95 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    /* background-color: #eaeaea; /* Page background from example, might be overridden by --background */
   }
   main {
     flex-grow: 1;
   }
 }
 
-/* New Resume Styles based on user's example */
-/* Styles for HTML generated by AI, to be rendered inside #resume-preview-container */
-/* The #resume-preview-container itself has bg-white, p-8, border, rounded-lg from preview-resume/page.tsx */
+/* Resume Styles for HTML generated by AI and PDF generation */
+/* These styles are used in preview-resume/page.tsx and download-resume/page.tsx */
 
-/* Ensure the AI generated HTML content within the prose wrapper uses these styles */
+/* Styles for #resume-preview-container (Tailwind Typography's .prose wrapper) */
 .prose {
-  /* Reset some prose defaults if they conflict */
-  --tw-prose-body: initial;
-  --tw-prose-headings: initial;
-  --tw-prose-lead: initial;
-  --tw-prose-links: initial;
-  --tw-prose-bold: initial;
-  --tw-prose-counters: initial;
-  --tw-prose-bullets: initial;
-  --tw-prose-hr: initial;
-  --tw-prose-quotes: initial;
-  --tw-prose-quote-borders: initial;
-  --tw-prose-captions: initial;
-  --tw-prose-code: initial;
-  --tw-prose-pre-code: initial;
-  --tw-prose-pre-bg: initial;
-  --tw-prose-th-borders: initial;
-  --tw-prose-td-borders: initial;
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-lead: hsl(var(--muted-foreground));
+  --tw-prose-links: hsl(var(--primary));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--muted-foreground));
+  --tw-prose-hr: hsl(var(--border));
+  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-quote-borders: hsl(var(--border));
+  --tw-prose-captions: hsl(var(--muted-foreground));
+  --tw-prose-code: hsl(var(--foreground));
+  --tw-prose-pre-code: hsl(var(--card-foreground));
+  --tw-prose-pre-bg: hsl(var(--card));
+  --tw-prose-th-borders: hsl(var(--border));
+  --tw-prose-td-borders: hsl(var(--border));
+
+  /* Dark mode prose */
+  --tw-prose-invert-body: hsl(var(--foreground));
+  --tw-prose-invert-headings: hsl(var(--foreground));
+  --tw-prose-invert-lead: hsl(var(--muted-foreground));
+  --tw-prose-invert-links: hsl(var(--primary));
+  --tw-prose-invert-bold: hsl(var(--foreground));
+  --tw-prose-invert-counters: hsl(var(--muted-foreground));
+  --tw-prose-invert-bullets: hsl(var(--muted-foreground));
+  --tw-prose-invert-hr: hsl(var(--border));
+  --tw-prose-invert-quotes: hsl(var(--foreground));
+  --tw-prose-invert-quote-borders: hsl(var(--border));
+  --tw-prose-invert-captions: hsl(var(--muted-foreground));
+  --tw-prose-invert-code: hsl(var(--foreground));
+  --tw-prose-invert-pre-code: hsl(var(--card-foreground));
+  --tw-prose-invert-pre-bg: hsl(var(--card));
+  --tw-prose-invert-th-borders: hsl(var(--border));
+  --tw-prose-invert-td-borders: hsl(var(--border));
 }
+
 
 .prose .resume-header {
   text-align: center;
-  padding: 20px 10px; /* Adjusted from 40px 20px due to parent padding */
-  background-color: #fff; /* Explicitly white */
-  border-bottom: 2px solid #ddd;
-  margin: -2rem -2rem 0 -2rem; /* Counteract parent padding for full width header */
-  width: calc(100% + 4rem); /* Counteract parent padding */
+  padding: 20px 10px; 
+  background-color: hsl(var(--card)); 
+  border-bottom: 2px solid hsl(var(--border));
+  margin: -2rem -2rem 0 -2rem; 
+  width: calc(100% + 4rem); 
 }
 
 .prose .resume-header h1 {
-  font-family: var(--font-space-grotesk), Arial, sans-serif; /* Project headline font */
-  font-size: 36px; /* Adjusted from 48px */
+  font-family: var(--font-space-grotesk), Arial, sans-serif; 
+  font-size: 36px; 
   margin: 0;
   font-weight: bold;
-  color: #222;
+  color: hsl(var(--foreground)); /* Adjusted to use theme foreground */
 }
 
 .prose .resume-header .job-title {
   font-family: var(--font-inter), Arial, sans-serif;
-  font-size: 18px; /* Adjusted from 20px */
-  color: #666;
-  margin-top: 8px; /* Adjusted from 10px */
+  font-size: 18px; 
+  color: hsl(var(--muted-foreground)); /* Adjusted */
+  margin-top: 8px; 
 }
 
 .prose .resume-body {
   display: flex;
-  /* margin: 40px auto; /* This margin is for standalone page, not needed here */
-  /* max-width: 1200px; /* Controlled by parent container */
-  background-color: #fff; /* Explicitly white */
-  padding: 20px 0px; /* Adjusted from 40px, parent container has p-8 (2rem) */
-  /* border-radius: 10px; /* Provided by parent Card */
-  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Provided by parent Card */
+  background-color: hsl(var(--card)); 
+  padding: 20px 0px; 
   font-family: var(--font-inter), Arial, sans-serif;
-  color: #333;
+  color: hsl(var(--foreground)); /* Adjusted */
 }
 
 .prose .resume-left-column,
 .prose .resume-right-column {
   flex: 1;
-  padding: 0 15px; /* Adjusted from 20px */
+  padding: 0 15px; 
 }
 
 .prose .resume-left-column {
-  border-right: 1px solid #ddd;
-  padding-right: 30px; /* Ensure space for border */
+  border-right: 1px solid hsl(var(--border));
+  padding-right: 30px; 
 }
 .prose .resume-right-column {
   padding-left: 30px;
@@ -187,45 +207,45 @@
 
 .prose .resume-body h2 {
   font-family: var(--font-inter), Arial, sans-serif;
-  font-size: 20px; /* Adjusted from 24px */
-  margin-top: 0; /* Reset margin for h2 if it's the first child */
+  font-size: 20px; 
+  margin-top: 0; 
   margin-bottom: 15px;
-  color: #333;
-  border-bottom: 2px solid #ddd;
+  color: hsl(var(--foreground)); /* Adjusted */
+  border-bottom: 2px solid hsl(var(--border));
   padding-bottom: 5px;
   font-weight: bold;
 }
 
 .prose .resume-body h3 {
   font-family: var(--font-inter), Arial, sans-serif;
-  font-size: 16px; /* Adjusted from 18px */
+  font-size: 16px; 
   margin: 10px 0;
-  color: #444;
+  color: hsl(var(--card-foreground)); /* Adjusted */
   font-weight: bold;
 }
 
 .prose .resume-body ul {
   list-style: none;
   padding: 0;
-  margin: 0; /* Resetting default ul margin */
+  margin: 0; 
 }
 
 .prose .resume-body ul li {
   margin: 5px 0;
-  font-size: 14px; /* Adjusted from 16px */
-  color: #555;
+  font-size: 14px; 
+  color: hsl(var(--muted-foreground)); /* Adjusted */
   line-height: 1.6;
 }
 
 .prose .contact-label {
   font-weight: bold;
-  color: #222;
+  color: hsl(var(--card-foreground)); /* Adjusted */
 }
 
 .prose .profile-section p {
-  font-size: 14px; /* Adjusted from 16px */
-  line-height: 1.7; /* Adjusted from 1.8 */
-  color: #444;
+  font-size: 14px; 
+  line-height: 1.7; 
+  color: hsl(var(--muted-foreground)); /* Adjusted */
   margin:0;
 }
 
@@ -234,79 +254,78 @@
 }
 .prose .education-section .institution,
 .prose .education-section .dates {
-    font-size: 13px; /* Slightly smaller */
-    color: #555;
+    font-size: 13px; 
+    color: hsl(var(--muted-foreground)); /* Adjusted */
     margin: 2px 0;
 }
 
 
 .prose .experience-entry {
-  margin-bottom: 20px; /* Adjusted from 30px */
+  margin-bottom: 20px; 
 }
 
 .prose .experience-entry .dates {
     font-size: 13px;
-    color: #666;
+    color: hsl(var(--muted-foreground)); /* Adjusted */
     margin-bottom: 2px;
 }
 
-.prose .experience-entry h3 { /* Job Title in experience */
-  margin: 0 0 2px 0; /* Adjusted margin */
-  font-size: 16px; /* Consistent with other h3 */
-  color: #333;
+.prose .experience-entry h3 { 
+  margin: 0 0 2px 0; 
+  font-size: 16px; 
+  color: hsl(var(--card-foreground)); /* Adjusted */
 }
 
-.prose .experience-entry .company { /* Company Name and Location */
+.prose .experience-entry .company { 
   font-size: 14px;
-  color: #555;
+  color: hsl(var(--muted-foreground)); /* Adjusted */
   margin-bottom: 5px;
 }
 .prose .experience-entry .company strong {
     font-weight: bold;
-    color: #333; /* Make company name slightly darker/bolder */
+    color: hsl(var(--card-foreground)); /* Adjusted */
 }
 
-.prose .experience-entry p:not(.dates):not(.company) { /* Paragraphs that are not dates or company */
+.prose .experience-entry p:not(.dates):not(.company) { 
   margin: 5px 0;
-  font-size: 14px; /* Adjusted from 16px */
-  color: #555;
+  font-size: 14px; 
+  color: hsl(var(--muted-foreground)); /* Adjusted */
 }
 
 .prose .experience-entry ul {
-  margin: 5px 0 0 15px; /* Top margin, left indent for bullets */
-  list-style: disc; /* Use disc for experience details */
-  padding-left: 5px; /* Space for bullet */
+  margin: 5px 0 0 15px; 
+  list-style: disc; 
+  padding-left: 5px; 
 }
 
 .prose .experience-entry ul li {
-  font-size: 14px; /* Adjusted from 16px */
+  font-size: 14px; 
   line-height: 1.6;
-  color: #444;
+  color: hsl(var(--muted-foreground)); /* Adjusted */
   margin-bottom: 3px;
 }
 
 .prose .resume-right-column .profile-section {
-  margin-bottom: 20px; /* Adjusted from 30px */
+  margin-bottom: 20px; 
 }
 
-.prose .skills-section h3 { /* Category like "Technical Skills" */
-  margin-top: 15px; /* Adjusted from 20px */
+.prose .skills-section h3 { 
+  margin-top: 15px; 
   margin-bottom: 5px;
-  font-size: 16px; /* Consistent with other h3 */
-  color: #333;
+  font-size: 16px; 
+  color: hsl(var(--card-foreground)); /* Adjusted */
 }
 .prose .skills-section > h3:first-of-type {
     margin-top: 0;
 }
 
 .prose .skills-section ul li {
-  margin: 3px 0; /* Adjusted from 5px */
-  font-size: 14px; /* Adjusted from 16px */
-  color: #444;
+  margin: 3px 0; 
+  font-size: 14px; 
+  color: hsl(var(--muted-foreground)); /* Adjusted */
 }
 
 /* Fallback styles for elements not specifically targeted by resume classes but within prose */
-/* These were the old fallbacks, may not be needed or may need adjustment */
 .prose-sm h1:not(.resume-header h1) {
   @apply font-headline text-2xl font-bold mb-1 text-foreground;
 }
