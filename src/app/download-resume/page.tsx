@@ -7,11 +7,13 @@ import Link from 'next/link';
 import { useResumeContext } from '@/contexts/ResumeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, RotateCcw, CheckCircle, Loader2, Printer } from 'lucide-react';
+import { FileText, RotateCcw, CheckCircle, Loader2, DownloadCloud } from 'lucide-react'; // Changed Printer to DownloadCloud
 import { useToast } from '@/hooks/use-toast';
+import html2pdf from 'html2pdf.js';
 
 const getResumeStyles = (): string => {
   // Styles optimized for A4 single-page PDF output
+  // Ensure these styles make the content fit on one A4 page.
   return `
     body {
       font-family: 'Inter', Arial, sans-serif;
@@ -21,26 +23,28 @@ const getResumeStyles = (): string => {
       color: #333;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
-      width: 210mm; /* A4 width */
-      height: 297mm; /* A4 height - optional, content should dictate */
+      /* width: 210mm; A4 width - html2pdf.js handles this with format:'a4' */
+      /* height: 297mm; A4 height - optional, content should dictate */
     }
 
-    .resume-container { /* Added a container for better control */
-      max-width: 780px; /* Adjusted for A4, allowing for browser margins */
-      margin: 15px auto; /* Reduced margin for print */
+    .resume-container { 
+      width: 100%; /* Use 100% width for html2pdf content element */
+      max-width: 190mm; /* Approx A4 width minus some margin, adjust as needed */
+      margin: 10mm auto; /* Centering for A4, adjust as needed */
       background-color: #fff;
+      box-sizing: border-box;
     }
 
     .resume-header {
       text-align: center;
-      padding: 20px 10px; /* Reduced padding */
+      padding: 15px 5px; /* Reduced padding */
       background-color: #fff;
       border-bottom: 1px solid #ddd; /* Thinner border */
     }
 
     .resume-header h1 {
       font-family: 'Space Grotesk', Arial, sans-serif;
-      font-size: 32px; /* Reduced font size */
+      font-size: 28px; /* Reduced font size */
       margin: 0;
       font-weight: bold;
       color: #222;
@@ -48,45 +52,45 @@ const getResumeStyles = (): string => {
 
     .resume-header .job-title {
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 16px; /* Reduced font size */
+      font-size: 14px; /* Reduced font size */
       color: #666;
-      margin-top: 5px; /* Reduced margin */
+      margin-top: 4px; /* Reduced margin */
     }
 
     .resume-body {
       display: flex;
-      padding: 20px 10px; /* Reduced padding */
+      padding: 15px 5px; /* Reduced padding */
     }
     
     .resume-left-column, .resume-right-column {
       flex: 1;
-      padding: 0 10px; /* Reduced padding */
+      padding: 0 8px; /* Reduced padding */
     }
 
     .resume-left-column {
       border-right: 1px solid #ddd;
-      padding-right: 15px; 
+      padding-right: 12px; 
     }
      .resume-right-column {
-      padding-left: 15px; 
+      padding-left: 12px; 
     }
 
 
     .resume-body h2 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 18px; /* Reduced font size */
+      font-size: 16px; /* Reduced font size */
       margin-top: 0;
-      margin-bottom: 8px; /* Reduced margin */
+      margin-bottom: 6px; /* Reduced margin */
       color: #333;
       border-bottom: 1px solid #ddd; /* Thinner border */
-      padding-bottom: 3px; /* Reduced padding */
+      padding-bottom: 2px; /* Reduced padding */
       font-weight: bold;
     }
 
     .resume-body h3 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 14px; /* Reduced font size */
-      margin: 5px 0; /* Reduced margin */
+      font-size: 13px; /* Reduced font size */
+      margin: 4px 0; /* Reduced margin */
       color: #444;
       font-weight: bold;
     }
@@ -98,10 +102,10 @@ const getResumeStyles = (): string => {
     }
 
     .resume-body ul li {
-      margin: 2px 0; /* Reduced margin */
-      font-size: 12px; /* Reduced font size */
+      margin: 1px 0; /* Reduced margin */
+      font-size: 11px; /* Reduced font size */
       color: #555;
-      line-height: 1.4; /* Adjusted line height */
+      line-height: 1.3; /* Adjusted line height */
     }
 
     .contact-label {
@@ -110,47 +114,46 @@ const getResumeStyles = (): string => {
     }
 
     .contact-section ul {
-      margin-bottom: 10px; /* Add some space after contact list */
+      margin-bottom: 8px; /* Add some space after contact list */
     }
 
     .profile-section p {
-      font-size: 12px; /* Reduced font size */
-      line-height: 1.5; /* Adjusted line height */
+      font-size: 11px; /* Reduced font size */
+      line-height: 1.4; /* Adjusted line height */
       color: #444;
-      margin:0 0 10px 0;
+      margin:0 0 8px 0;
     }
 
     .education-section > div {
-        margin-bottom: 8px; /* Reduced margin */
+        margin-bottom: 6px; /* Reduced margin */
     }
     .education-section .institution,
     .education-section .dates {
-        font-size: 11px; /* Reduced font size */
+        font-size: 10px; /* Reduced font size */
         color: #555;
         margin: 1px 0; /* Reduced margin */
     }
 
     .experience-entry {
-      margin-bottom: 15px; /* Reduced margin */
-      page-break-inside: avoid;
+      margin-bottom: 12px; /* Reduced margin */
     }
 
     .experience-entry .dates {
-        font-size: 11px; /* Reduced font size */
+        font-size: 10px; /* Reduced font size */
         color: #666;
         margin-bottom: 1px; /* Reduced margin */
     }
 
     .experience-entry h3 { /* Job Title */
-      margin: 2px 0; /* Reduced margin */
-      font-size: 14px; /* Reduced font size */
+      margin: 1px 0; /* Reduced margin */
+      font-size: 13px; /* Reduced font size */
       color: #333;
     }
 
     .experience-entry .company { 
-      font-size: 12px; /* Reduced font size */
+      font-size: 11px; /* Reduced font size */
       color: #555;
-      margin-bottom: 2px; /* Reduced margin */
+      margin-bottom: 1px; /* Reduced margin */
     }
     .experience-entry .company strong {
         font-weight: bold;
@@ -158,31 +161,26 @@ const getResumeStyles = (): string => {
     }
 
     .experience-entry ul {
-      margin: 4px 0 0 12px; /* Adjusted margin & indent */
+      margin: 3px 0 0 10px; /* Adjusted margin & indent */
       list-style: disc;
-      padding-left: 5px; 
+      padding-left: 4px; 
     }
 
     .experience-entry ul li {
-      font-size: 12px; /* Reduced font size */
-      line-height: 1.4; /* Adjusted line height */
+      font-size: 11px; /* Reduced font size */
+      line-height: 1.3; /* Adjusted line height */
       color: #444;
-      margin-bottom: 2px; /* Reduced margin */
+      margin-bottom: 1px; /* Reduced margin */
     }
 
     .resume-right-column .profile-section {
-      margin-bottom: 15px; /* Reduced margin */
-      page-break-inside: avoid;
+      margin-bottom: 12px; /* Reduced margin */
     }
     
-    .education-section, .skills-section, .contact-section {
-        page-break-inside: avoid;
-    }
-
     .skills-section h3 { /* Category */
-      margin-top: 8px; /* Reduced margin */
-      margin-bottom: 2px; /* Reduced margin */
-      font-size: 14px; /* Reduced font size */
+      margin-top: 6px; /* Reduced margin */
+      margin-bottom: 1px; /* Reduced margin */
+      font-size: 13px; /* Reduced font size */
       color: #333;
     }
     .skills-section > h3:first-of-type {
@@ -190,9 +188,14 @@ const getResumeStyles = (): string => {
     }
 
     .skills-section ul li {
-      margin: 2px 0; /* Reduced margin */
-      font-size: 12px; /* Reduced font size */
+      margin: 1px 0; /* Reduced margin */
+      font-size: 11px; /* Reduced font size */
       color: #444;
+    }
+
+    /* Ensure page breaks are avoided within these sections if content is too long */
+    .education-section, .skills-section, .contact-section, .experience-entry, .profile-section {
+        page-break-inside: avoid;
     }
     `;
 };
@@ -201,6 +204,7 @@ const getResumeStyles = (): string => {
 export default function DownloadResumePage() {
   const router = useRouter();
   const { generatedResumeHtml, isPaid, resetContext } = useResumeContext();
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -256,96 +260,56 @@ export default function DownloadResumePage() {
     toast({ title: "Download Started", description: "Your HTML resume is downloading." });
   };
 
-  const printToPdf = () => {
+  const downloadPdfDirectly = async () => {
     if (!generatedResumeHtml) {
       toast({ title: "Error", description: "No resume content to generate PDF.", variant: "destructive" });
       return;
     }
+    setIsPdfLoading(true);
+    toast({ title: "Generating PDF...", description: "This may take a few moments." });
 
-    toast({ title: "Preparing PDF...", description: "Your browser's print dialog will open. Please select 'Save as PDF'." });
-
+    const styles = getResumeStyles();
     const fullHtmlForPdf = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Resume</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
-  <style>
-    ${getResumeStyles()}
-    @media print {
-      body { 
-        margin: 0; 
-        padding: 0; 
-        background-color: #fff; 
-        -webkit-print-color-adjust: exact; 
-        print-color-adjust: exact;
-      }
-      .resume-container {
-        margin: 0; /* Remove margins for print */
-        box-shadow: none; /* Remove shadow for print */
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="resume-container">
-    ${generatedResumeHtml}
-  </div>
-</body>
-</html>`;
-
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.width = '0'; // Can be '100%' or a specific width for debugging layout
-    iframe.style.height = '0'; // Can be '100vh' or a specific height for debugging layout
-    iframe.style.border = 'none';
-    iframe.style.visibility = 'hidden'; // Make it 'visible' for debugging layout issues
-    // iframe.style.zIndex = '10000'; // For debugging, bring to front
-    document.body.appendChild(iframe);
-
-    iframe.contentDocument!.open();
-    iframe.contentDocument!.write(fullHtmlForPdf);
-    iframe.contentDocument!.close();
-
-    const printAndRemove = () => {
-      try {
-        iframe.contentWindow!.focus(); 
-        const printSuccessful = iframe.contentWindow!.document.execCommand('print', false, undefined);
-        if (!printSuccessful) { // Fallback for browsers that don't return true/false or where execCommand fails for print
-             iframe.contentWindow!.print();
-        }
-      } catch (e) {
-        console.error("Error during printing:", e);
-        // Fallback if execCommand is blocked or fails
-        try {
-            iframe.contentWindow!.print();
-        } catch (e2) {
-             console.error("Secondary print attempt failed:", e2);
-             toast({
-                title: "Print Error",
-                description: "Could not open print dialog. Please try again or download as HTML.",
-                variant: "destructive"
-             });
-        }
-      } finally {
-        setTimeout(() => {
-          if (document.body.contains(iframe)) {
-            document.body.removeChild(iframe);
-          }
-        }, 500); 
-      }
-    };
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>My Resume</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+        <style>${styles}</style>
+      </head>
+      <body>
+        <div class="resume-container">
+          ${generatedResumeHtml}
+        </div>
+      </body>
+      </html>`;
     
-    // Ensure content is loaded before printing
-    if (iframe.contentWindow && iframe.contentWindow.document.readyState === 'complete') {
-      printAndRemove();
-    } else {
-       iframe.onload = printAndRemove;
+    const options = {
+      margin: 0, // CSS handles margins via .resume-container
+      filename: 'Resumatic_AI_Resume.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'avoid-all'] } // 'avoid-all' tries to prevent elements from breaking, 'css' respects CSS break rules
+    };
+
+    try {
+      // html2pdf.js uses Promises
+      await html2pdf().from(fullHtmlForPdf).set(options).save();
+      toast({ title: "PDF Downloaded", description: "Your resume PDF has been downloaded." });
+    } catch (error) {
+      console.error("Error generating PDF with html2pdf.js:", error);
+      toast({
+        title: "PDF Generation Failed",
+        description: "Could not generate PDF. Please try downloading as HTML or try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsPdfLoading(false);
     }
   };
 
@@ -388,15 +352,23 @@ export default function DownloadResumePage() {
                 <FileText className="mr-2 h-5 w-5" /> Download as HTML
               </Button>
               <Button 
-                onClick={printToPdf} 
+                onClick={downloadPdfDirectly} 
                 size="lg" 
                 variant="outline" 
                 className="flex-1"
+                disabled={isPdfLoading}
               >
-                <Printer className="mr-2 h-5 w-5" /> Print to PDF
+                {isPdfLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Generating PDF...
+                  </>
+                ) : (
+                  <>
+                    <DownloadCloud className="mr-2 h-5 w-5" /> Download as PDF
+                  </>
+                )}
               </Button>
             </div>
-             <p className="text-sm text-muted-foreground mt-3">For PDF, your browser's print dialog will appear. Choose "Save as PDF".</p>
           </div>
           
           <div className="mt-8">
