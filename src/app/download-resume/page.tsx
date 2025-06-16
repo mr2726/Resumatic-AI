@@ -17,7 +17,7 @@ const getResumeStyles = (): string => {
       font-family: 'Inter', Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #eaeaea;
+      background-color: #fff; /* Changed for PDF to ensure white background */
       color: #333;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
@@ -47,52 +47,42 @@ const getResumeStyles = (): string => {
 
     .resume-body {
       display: flex;
-      margin: 40px auto; 
-      max-width: 1200px;
+      margin: 20px auto; /* Reduced margin for typical A4 */
+      max-width: 1000px; /* Adjusted for A4 like rendering */
       background-color: #fff;
-      padding: 40px;
-      border-radius: 10px; 
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+      padding: 30px; /* Adjusted padding */
+      /* No border-radius or shadow for PDF to keep it clean */
     }
     
-    @media print {
-      body {
-        background-color: #fff; 
-      }
-      .resume-body {
-        margin: 20px auto;
-        max-width: 1000px; 
-        padding: 30px;
-        border-radius: 0;
-        box-shadow: none;
-      }
-    }
-
-
     .resume-left-column, .resume-right-column {
       flex: 1;
-      padding: 20px;
+      padding: 15px; /* Adjusted padding */
     }
 
     .resume-left-column {
       border-right: 1px solid #ddd;
+      padding-right: 25px; /* Ensure space for border */
     }
+     .resume-right-column {
+      padding-left: 25px; 
+    }
+
 
     .resume-body h2 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 24px;
+      font-size: 22px; /* Slightly reduced */
       margin-top: 0;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       color: #333;
       border-bottom: 2px solid #ddd;
-      padding-bottom: 5px;
+      padding-bottom: 4px;
       font-weight: bold;
     }
 
     .resume-body h3 { 
       font-family: 'Inter', Arial, sans-serif;
-      font-size: 18px;
-      margin: 10px 0;
+      font-size: 17px; /* Slightly reduced */
+      margin: 8px 0;
       color: #444;
       font-weight: bold;
     }
@@ -104,10 +94,10 @@ const getResumeStyles = (): string => {
     }
 
     .resume-body ul li {
-      margin: 5px 0;
-      font-size: 16px;
+      margin: 4px 0;
+      font-size: 15px; /* Slightly reduced */
       color: #555;
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     .contact-label {
@@ -116,42 +106,42 @@ const getResumeStyles = (): string => {
     }
 
     .profile-section p {
-      font-size: 16px;
-      line-height: 1.8;
+      font-size: 15px; /* Slightly reduced */
+      line-height: 1.7;
       color: #444;
       margin:0;
     }
 
     .education-section > div {
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
     .education-section .institution,
     .education-section .dates {
-        font-size: 13px;
+        font-size: 12px; /* Slightly reduced */
         color: #555;
         margin: 2px 0;
     }
 
     .experience-entry {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .experience-entry .dates {
-        font-size: 13px;
+        font-size: 12px; /* Slightly reduced */
         color: #666;
         margin-bottom: 2px;
     }
 
     .experience-entry h3 { 
-      margin: 5px 0;
-      font-size: 18px;
+      margin: 4px 0;
+      font-size: 17px; /* Consistent with other h3 */
       color: #333;
     }
 
     .experience-entry .company { 
-      font-size: 14px;
+      font-size: 13px; /* Slightly reduced */
       color: #555;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
     .experience-entry .company strong {
         font-weight: bold;
@@ -159,26 +149,26 @@ const getResumeStyles = (): string => {
     }
 
     .experience-entry ul {
-      margin: 10px 0 0 15px;
+      margin: 8px 0 0 15px;
       list-style: disc;
       padding-left: 5px; 
     }
 
     .experience-entry ul li {
-      font-size: 16px;
-      line-height: 1.6;
+      font-size: 15px; /* Slightly reduced */
+      line-height: 1.5;
       color: #444;
       margin-bottom: 3px;
     }
 
     .resume-right-column .profile-section {
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
     .skills-section h3 { 
-      margin-top: 20px;
-      margin-bottom: 5px;
-      font-size: 18px;
+      margin-top: 15px;
+      margin-bottom: 4px;
+      font-size: 17px; /* Consistent */
       color: #333;
     }
     .skills-section > h3:first-of-type {
@@ -186,9 +176,13 @@ const getResumeStyles = (): string => {
     }
 
     .skills-section ul li {
-      margin: 5px 0;
-      font-size: 16px;
+      margin: 4px 0;
+      font-size: 15px; /* Slightly reduced */
       color: #444;
+    }
+    /* Ensure no page breaks inside these elements if possible */
+    .experience-entry, .education-section > div, .skills-section {
+        page-break-inside: avoid;
     }
     `;
 };
@@ -259,7 +253,7 @@ export default function DownloadResumePage() {
     if (isPdfLoading) return;
 
     setIsPdfLoading(true);
-    toast({ title: "Generating PDF...", description: "Please wait. This can take up to 30 seconds." });
+    toast({ title: "Generating PDF...", description: "Please wait. This can take a moment." });
     
     const fullHtmlForPdf = `
 <!DOCTYPE html>
@@ -302,9 +296,9 @@ export default function DownloadResumePage() {
       } else {
         toast({
           title: "PDF Generation Failed",
-          description: result.error || "Could not generate PDF. This feature can be unreliable on some server environments. Please try the HTML download, or try PDF again later.",
+          description: result.error || "Could not generate PDF. Please try the HTML download, or try PDF again later.",
           variant: "destructive",
-          duration: 10000, // Increased duration for this specific error
+          duration: 10000,
         });
       }
     } catch (error) {
@@ -369,7 +363,7 @@ export default function DownloadResumePage() {
                 {isPdfLoading ? "Generating PDF..." : "Download as PDF"}
               </Button>
             </div>
-             {isPdfLoading && <p className="text-sm text-muted-foreground mt-3">PDF generation can take up to 30 seconds and may not work in all environments.</p>}
+             {isPdfLoading && <p className="text-sm text-muted-foreground mt-3">PDF generation using Puppeteer can take a few moments. Thank you for your patience.</p>}
           </div>
           
           <div className="mt-8">
